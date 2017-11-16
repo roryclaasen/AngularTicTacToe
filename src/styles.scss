@@ -1,0 +1,21 @@
+@import "../node_modules/bootstrap/scss/bootstrap";
+@import "mixins";
+
+@each $color, $value in $theme-colors {
+    @include bg-gradient-variant(".bg-gradient-#{$color}", $value);
+}
+
+html, body { height: 100%; }
+
+.vertical-positioning-wrapper {
+    min-height: 100vh;
+    @include transform(translateY(40%));
+    .vertical-positioning-40 {
+        @include transform(translateY(-50%));
+    }
+}
+
+.join-scope {
+    height: 100%;
+    overflow: hidden;
+}
