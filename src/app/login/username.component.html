@@ -2,7 +2,7 @@
     <div class="my-auto vertical-positioning-wrapper">
         <div class="vertical-positioning-40">
             <div class="mb-4 text-white text-center">
-                <h1>Tic Tac Toe</h1>
+                <h1>Tic-Tac-Toe</h1>
             </div>
 
             <div class="card mx-auto" style="max-width: 30rem;">
@@ -10,10 +10,10 @@
                 <div class="card-body">
                     <div class="card-text">
                         <div class="input-group ">
-                            <input type="text" class="form-control" placeholder="Username" aria-label="Username" [(ngModel)]='username'>
+                            <input type="text" class="form-control" placeholder="Username" aria-label="Username" maxlength="{{ inputLength }}" [(ngModel)]='username'>
                         </div>
                     </div>
-                    <button class="btn btn-primary mt-3 float-right">Continue</button>
+                    <button class="btn btn-primary mt-3 float-right" (click)='validate()' [ngClass]="(username.length==0) ? 'disabled' : ''">Continue</button>
                 </div>
             </div>
         </div>
