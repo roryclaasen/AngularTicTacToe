@@ -1,12 +1,12 @@
 {
-  "name": "tictactoe",
+  "name": "AngularTicTacToe",
   "version": "0.0.1",
   "author": "@roryclaasen (http://roryclaasen.me)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/roryclaasen/AngularTicTacToe/issues"
   },
-  "homepage": "https://github.com/roryclaasen/AngularTicTacToe/colors.css#readme",
+  "homepage": "https://github.com/roryclaasen/AngularTicTacToe#readme",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -14,7 +14,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build.prod": "ng build --prod --base-href \"AngularTicTacToe\""
+    "build.prod": "ng build --prod --base-href \"/AngularTicTacToe/\""
   },
   "private": true,
   "repository": {
