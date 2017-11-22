@@ -1,10 +1,6 @@
 @import "../node_modules/bootstrap/scss/bootstrap";
 @import "mixins";
 
-@each $color, $value in $theme-colors {
-    @include bg-gradient-variant(".bg-gradient-#{$color}", $value);
-}
-
 html, body { height: 100%; }
 
 .vertical-positioning-wrapper {
@@ -21,3 +17,19 @@ html, body { height: 100%; }
 }
 
 .btn:not(.disabled) { cursor: pointer; }
+
+.bg-anim {
+    @include animation('bgColor 14s infinite');
+    -webkit-animation-direction: alternate; 
+    animation-direction: alternate;
+}
+
+@include keyframes(bgColor) {
+    0% { background-color: #45a3e5; },
+    17% { background-color: #3cc; },
+    34% { background-color: #66bf39; },
+    51% { background-color: #ffa602; },
+    67% { background-color: #eb670f; },
+    84% { background-color: #f35; },
+    100% { background-color: #864cbf; }
+};
