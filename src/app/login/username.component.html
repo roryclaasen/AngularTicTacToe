@@ -2,19 +2,20 @@
     <div class="my-auto vertical-positioning-wrapper">
         <div class="vertical-positioning-40">
             <div class="mb-4 text-white text-center">
-                <h1>{{ header }}</h1>
+                <h1>{{ (username.length > 0 ) ? username : 'Tic-Tac-Toe' }}</h1>
             </div>
 
             <div class="card mx-auto" style="max-width: 30rem;">
                 <div class="card-header">{{ inputPrompt }}</div>
                 <div class="card-body">
                     <div class="card-text">
-                        <div class="input-group ">
-                            <input type="{{ inputType }}" class="form-control" placeholder="{{ inputLabel }}" [attr.aria-label]="inputLabel" maxlength="{{ inputLength }}" [(ngModel)]='input'>
+                        <div class="input-group">
+                            <input type="{{ inputType }}" class="form-control" placeholder="{{ inputLabel }}" [attr.aria-label]="inputLabel" maxlength="{{ (inputType == 'text') ? 24 : 6 }}" [(ngModel)]='input'>
                         </div>
                     </div>
-                    <button class="btn btn-primary mt-3 ml-2 float-right" (click)='validate()' [ngClass]="(input.length==0) ? 'disabled' : ''">Continue</button>
-                    <button class="btn btn-primary mt-3 float-right" (click)='createServer()' [ngClass]="(username.length==0) ? 'd-none' : ''">Create Server</button>
+                    <button class="btn btn-warning mt-3 float-left" (click)='resetInputs()' *ngIf="username.length > 0">Back</button>
+                    <button class="btn btn-success mt-3 ml-2 float-right" (click)='validate()' [ngClass]="(input.length==0) ? 'disabled' : ''">Continue</button>
+                    <button class="btn btn-primary mt-3 float-right" (click)='createServer()' *ngIf="username.length > 0">Create Server</button>
                 </div>
             </div>
         </div>
