@@ -17,7 +17,10 @@ export class GameComponent {
     players = 0;
     gameId: string;
 
-    winner=  false;
+    winner = false;
+
+    currentY: number;
+    currentX: number;
 
     constructor(private boardService: BoardService) {
         this.createBoard();
@@ -40,19 +43,28 @@ export class GameComponent {
 
     place(e: any): GameComponent {
         const id = e.target.id, row = id.substring(1, 2), col = id.substring(2, 3), tile = this.board.tiles[row][col];
-        if (!this.checkValidHit(tile)) {
+        if (!this.checkValidHit(row, col, tile)) {
             return;
         }
+        this.currentY = row;
+        this.currentX = col;
+
         this.board.tiles[row][col].used = true;
         this.board.tiles[row][col].class = 'cross';
+
+        this.boardService.calculateResults();
+
         return this;
     }
 
-    checkValidHit(tile: any): boolean {
+    checkValidHit(row: number, col: number, tile: any): boolean {
         if (this.winner) {
             return false;
         }
         if (tile.class.length > 0) {
+            return false;
+        }
+        if (!this.validSector(row, col)) {
             return false;
         }
         return true;
@@ -65,5 +77,23 @@ export class GameComponent {
 
     get board(): Board {
         return this.boardService.getBoard();
+    }
+
+    get resultBoard(): Board {
+        return this.boardService.getResultBoard();
+    }
+
+    validSector(row: number, col: number): boolean {
+        if (this.currentY === undefined && this.currentX === undefined) {
+            return true;
+        }
+
+        if (Math.floor(row / 3) === this.currentY % 3) {
+            if (Math.floor(col / 3) === this.currentX % 3) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -21,6 +21,18 @@ html, body { height: 100%; }
     100% { background-color: #864cbf; }
 };
 
+%center {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.d-table {
+    .center {
+        @extend %center;
+    }
+}
+
 .layout {
     width:100vw;
     height:100vh;
@@ -30,9 +42,7 @@ html, body { height: 100%; }
     display: table;
 
     .center {
-        display: table-cell;
-        vertical-align: middle;
-        text-align: center;
+        @extend %center;
     }
 
     .spinner {

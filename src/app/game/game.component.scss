@@ -5,34 +5,44 @@ table.grid {
     $border-thick: solid 4px black;
 
     border: $border-thick;
-    margin: auto;    
-    tr {
-        &:nth-child(3), &:nth-child(6) {
-            border-bottom: $border-thick;
-        }
+    margin: auto;
 
+    &:not(.results) {
+        tr {
+            &:nth-child(3), &:nth-child(6) {
+                border-bottom: $border-thick;
+            }
+
+            td {
+                border: $border-thin;
+
+                &:nth-child(3), &:nth-child(6) {
+                    border-right: $border-thick;
+                }
+
+                &:not(.disabled) {
+                    &:hover {
+                        background-color: darken(white, 20%);
+                        cursor: pointer;
+                    }
+                }               
+            }
+        }
+    }
+    tr {
         td {
             border: $border-thin;
-
-            &:nth-child(3), &:nth-child(6) {
-                border-right: $border-thick;
-            }
 
             width: $cellSize;
             height: $cellSize;
 
-            background: white;
+            padding: 0;
 
-            &:hover {
-                background-color: darken(white, 20%);
-                cursor: pointer;
-            }
+            background: white;           
 
-            &.disabled {
-                background-color: darken(white, 50%);
-            }
+            &.disabled {  background-color: darken(white, 60%); cursor: default }
 
-            &, .color {
+            .color {
                 &.cross {
                     background-color: red;
                 }

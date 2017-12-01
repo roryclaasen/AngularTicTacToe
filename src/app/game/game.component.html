@@ -1,11 +1,28 @@
-<table class="grid is-bordered">
-    <tbody>
-        <tr *ngFor="let row of board.tiles; let y = index">
-            <td *ngFor="let col of row; let x = index"
-            (click)="place($event)"
-            id="t{{y}}{{x}}" [ngClass]="col.class">
-                <div class="color" [ngClass]="col.class"></div>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<div class="row">
+    <div class="col-7">
+        <table class="grid is-bordered float-right">
+            <tbody>
+                <tr *ngFor="let row of board.tiles; let y = index">
+                    <td *ngFor="let col of row; let x = index" (click)="place($event)" id="t{{y}}{{x}}" [ngClass]="validSector(y, x) ? '' : 'disabled'">
+                        <div class="color" [ngClass]="col.class"></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-5">
+        <div class="d-table h-100">
+            <div class="d-table-cell align-middle h-100">
+                <table class="grid is-bordered results float-left">
+                    <tbody>
+                        <tr *ngFor="let row of resultBoard.tiles; let y = index">
+                            <td *ngFor="let col of row; let x = index" id="t{{y}}{{x}}">
+                                <div class="color" [ngClass]="col.class"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
