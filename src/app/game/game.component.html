@@ -1,0 +1,11 @@
+<table class="grid is-bordered">
+    <tbody>
+        <tr *ngFor="let row of board.tiles; let y = index">
+            <td *ngFor="let col of row; let x = index"
+            (click)="place($event)"
+            id="t{{y}}{{x}}" [ngClass]="col.class">
+                <div class="color" [ngClass]="col.class"></div>
+            </td>
+        </tr>
+    </tbody>
+</table>
