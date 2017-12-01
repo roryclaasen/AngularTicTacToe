@@ -45,8 +45,10 @@ export class BoardService {
                     const y = sY * 3, x = sX * 3;
                     let compleate = false;
 
+                    let tClass = this.board.tiles[y][x].class;
+
                     for (let tY = y; tY < y + 3; tY ++) {
-                        const tClass = this.board.tiles[tY][x].class;
+                        tClass = this.board.tiles[tY][x].class;
                         if (tClass.length === 0) { continue; }
                         if (tClass === this.board.tiles[tY][x + 1].class && tClass === this.board.tiles[tY][x + 2].class) {
                             this.results.tiles[sY][sX].class = tClass;
@@ -57,7 +59,7 @@ export class BoardService {
                     if (compleate) { continue; }
 
                     for (let tX = x; tX < x + 3; tX++) {
-                        const tClass = this.board.tiles[y][tX].class;
+                        tClass = this.board.tiles[y][tX].class;
                         if (tClass.length === 0) { continue; }
                         if (tClass === this.board.tiles[y + 1][tX].class && tClass === this.board.tiles[y + 2][tX].class) {
                             this.results.tiles[sY][sX].class = tClass;
@@ -67,7 +69,7 @@ export class BoardService {
 
                     if (compleate) { continue; }
 
-                    let tClass = this.board.tiles[y][x].class;
+                    tClass = this.board.tiles[y][x].class;
 
                     if (tClass.length > 0) {
                         if (tClass === this.board.tiles[y + 1][x + 1].class && tClass === this.board.tiles[y + 2][x + 2].class) {

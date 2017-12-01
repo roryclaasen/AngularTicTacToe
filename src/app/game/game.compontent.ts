@@ -50,7 +50,7 @@ export class GameComponent {
         this.currentX = col;
 
         this.board.tiles[row][col].used = true;
-        this.board.tiles[row][col].class = 'cross';
+        this.board.tiles[row][col].class = 'cross'; // TODO get player color
 
         this.boardService.calculateResults();
 
