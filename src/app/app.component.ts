@@ -10,7 +10,7 @@ export class AppComponent {
     title = 'TicTacToe';
     navbar = false;
 
-    loaded = true; // false;
+    loaded = false; // false;
 
     inputPrompt = 'Enter your username';
     inputLabel = 'Username';
