@@ -21,8 +21,8 @@ export class AppComponent {
     gamePin = '';
 
     inputs = {
-        'id': '',
-        'username': ''
+        'id': undefined,
+        'username': undefined
     };
 
     validate(): void {

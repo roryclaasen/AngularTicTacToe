@@ -3,8 +3,8 @@
         <div class="card-header" *ngIf="players < 2 ">Waiting for 2nd user to join...</div>
         <div class="card-body">
             <div class="card-text" *ngIf="players < 2 ">
-                <h3>{{ gameData.id }}</h3>
-                Tell your friend to use <b>{{ gameData.id }}</b> as the game pin
+                <h3>{{ gameData.username }}</h3>
+                Tell your friend to use <h4 class="font-weight-bold">{{ gameData.id }}</h4> as the game pin
             </div>
             <div class="card-text" *ngIf="player > 1">
                 Sorry, only 2 players can play at a time. You can start your own game by visiting
