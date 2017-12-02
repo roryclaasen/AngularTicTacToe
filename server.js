@@ -40,4 +40,4 @@ app.get('*', (req, res) => {
 });
 
 var port = process.env.PORT || 3000;
-app.listen(port, () => console.log('Listening at http://localhost:3000'));
+app.listen(port, () => console.log('Listening at http://localhost:' + port));
