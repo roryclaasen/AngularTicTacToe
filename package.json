@@ -10,7 +10,7 @@
   "scripts": {
     "ng": "ng",
     "ngstart": "ng serve",
-    "start": "npm run build.prod && node server.js",
+    "start": "npm run build.prod | node server.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
