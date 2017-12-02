@@ -30,7 +30,6 @@ export class GameComponent {
     set gameData(value) {
         this._gameData = value;
         this.valuesEntered.next({ value: 'changed to ' + this._gameData });
-        console.log(value);
         this.initPusher();
         this.listenForChanges();
     }
@@ -53,27 +52,11 @@ export class GameComponent {
     }
 
     initPusher(): GameComponent {
-        const pusher = new Pusher('98657ea4123db5df46a6', {
-            authEndpoint: '/pusher/auth',
-            cluster: 'eu'
-        });
-        this.pusherChannel = pusher.subscribe(this.gameData.id);
-        this.pusherChannel.bind('pusher:member_added', member => this.players++ );
-        this.pusherChannel.bind('pusher:subscription_succeeded', members => {
-            this.players = members.count;
-            this.setPlayer(this.players);
-            this.toastr.success('Success', 'Connected!');
-        });
-        this.pusherChannel.bind('pusher:member_removed', member => this.players-- );
-
+        console.log(this.gameData);
         return this;
     }
 
     listenForChanges(): GameComponent {
-        this.pusherChannel.bind('client-fire', (obj) => {
-            this.canPlay = !this.canPlay;
-            this.board[obj.boardId] = obj.board;
-        });
         return this;
     }
 
