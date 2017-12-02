@@ -10,12 +10,12 @@
   "scripts": {
     "ng": "ng",
     "ngstart": "ng serve",
-    "start": "npm build.prod && node server.js",
+    "start": "npm run build.prod && node server.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build.prod": "ng build --env=prod" // --base-href=/AngularTicTacToe/"
+    "build.prod": "ng build --env=prod"
   },
   "private": true,
   "repository": {
