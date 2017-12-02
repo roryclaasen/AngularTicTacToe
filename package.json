@@ -16,7 +16,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build.prod": "ng build --env=prod",
-    "postinstall": "ng build --aot --env=prod"
+    "postinstall": "ng build --env=prod"
   },
   "private": true,
   "repository": {
