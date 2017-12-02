@@ -13,8 +13,8 @@
     "ngstart": "ng serve",
     "start": "node server.js",
     "build": "ng build",
-    "build.prod": "ng build --env=prod",
-    "deploy": "ng build --env=prod && git add dist -f && git commit -am 'deploying...' && git push heroku master"
+    "build.prod": "ng build --prod",
+    "deploy": "ng build --prod && git add dist -f && git commit -am 'deploying...' && git push heroku master"
   },
   "engines": {
     "node": "~6.9.2",
