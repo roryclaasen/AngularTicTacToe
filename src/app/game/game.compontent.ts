@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewContainerRef, Input, Output, EventEmitter } from '@angular/core';
+import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { BoardService } from '../board.service';
 import { Board } from '../board';
 
+declare const Pusher: any;
+const NUM_PLAYERS = 2;
 const BOARD_SIZE = 9;
 
 @Component({
@@ -12,22 +15,65 @@ const BOARD_SIZE = 9;
 })
 
 export class GameComponent {
+    private _gameData;
+
+    pusherChannel: any;
+
     canPlay = true;
     player = 0;
     players = 0;
-    gameId: string;
+
+    @Output()
+    valuesEntered = new EventEmitter();
+
+    @Input()
+    set gameData(value) {
+        this._gameData = value;
+        this.valuesEntered.next({ value: 'changed to ' + this._gameData });
+        console.log(value);
+        this.initPusher();
+        this.listenForChanges();
+    }
+
+    get gameData() {
+        return this._gameData;
+    }
 
     winner = false;
 
     currentY: number;
     currentX: number;
 
-    constructor(private boardService: BoardService) {
+    gameUrl: string = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+
+    constructor(private boardService: BoardService, private toastr: ToastsManager, private _vcr: ViewContainerRef) {
+        this.toastr.setRootViewContainerRef(_vcr);
         this.createBoard();
-        this.listenForChanges();
+        this.initPusher();
+    }
+
+    initPusher(): GameComponent {
+        const pusher = new Pusher('98657ea4123db5df46a6', {
+            authEndpoint: '/pusher/auth',
+            cluster: 'eu'
+        });
+        this.pusherChannel = pusher.subscribe(this.gameData.id);
+        this.pusherChannel.bind('pusher:member_added', member => this.players++ );
+        this.pusherChannel.bind('pusher:subscription_succeeded', members => {
+            this.players = members.count;
+            this.setPlayer(this.players);
+            this.toastr.success('Success', 'Connected!');
+        });
+        this.pusherChannel.bind('pusher:member_removed', member => this.players-- );
+
+        return this;
     }
 
     listenForChanges(): GameComponent {
+        this.pusherChannel.bind('client-fire', (obj) => {
+            this.canPlay = !this.canPlay;
+            this.board[obj.boardId] = obj.board;
+        });
         return this;
     }
 
@@ -50,9 +96,14 @@ export class GameComponent {
         this.currentX = col;
 
         this.board.tiles[row][col].used = true;
-        this.board.tiles[row][col].class = 'cross'; // TODO get player color
+        this.board.tiles[row][col].class = (this.player === 1) ? 'cross' : 'nought' ; // TODO get player color
 
         this.boardService.calculateResults();
+
+        this.pusherChannel.trigger('client-fire', {
+            player: this.player,
+            board: this.board
+        });
 
         return this;
     }
@@ -95,5 +146,9 @@ export class GameComponent {
         }
 
         return false;
+    }
+
+    get validPlayer(): boolean {
+        return (this.players >= NUM_PLAYERS) && (this.player < NUM_PLAYERS);
     }
 }

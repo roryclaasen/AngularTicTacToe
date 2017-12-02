@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
     selector: 'app-root',
@@ -19,6 +19,11 @@ export class AppComponent {
 
     username = '';
     gamePin = '';
+
+    inputs = {
+        'id': '',
+        'username': ''
+    };
 
     validate(): void {
         const input = this.input;
@@ -44,12 +49,19 @@ export class AppComponent {
     }
 
     createServer(): void {
-        // TODO Generate Game pointer
-        // this.join( .. );
+        this.join(this.getUniqueId());
     }
 
     join(gamePin): void {
         this.gamePin = gamePin;
+        this.inputs = {
+            'id': this.gamePin,
+            'username': this.username
+        };
         this.loaded = true;
+    }
+
+    getUniqueId(): number {
+        return Math.floor(100000 + Math.random() * 900000);
     }
 }
