@@ -1,6 +1,6 @@
 {
   "name": "AngularTicTacToe",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "@roryclaasen (http://roryclaasen.me)",
   "license": "MIT",
   "main": "server.js",
@@ -14,7 +14,7 @@
     "start": "node server.js",
     "build": "ng build",
     "build.prod": "ng build --prod",
-    "deploy": "ng build --prod && git add dist -f && git commit -am 'deploying...' && git push heroku master"
+    "deploy": "ng build --prod && git add dist -f && git commit -am 'deploying...' && git push heroku master && rd dist /q"
   },
   "engines": {
     "node": "~6.9.2",
