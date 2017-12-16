@@ -10,7 +10,7 @@
   "homepage": "https://github.com/roryclaasen/AngularTicTacToe#readme",
   "scripts": {
     "ng": "ng",
-    "ngstart": "ng serve",
+    "ngstart": "ng build --watch true ; node server.js",
     "start": "node server.js",
     "build": "ng build",
     "build.prod": "ng build --prod",

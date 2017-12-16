@@ -3,7 +3,7 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { BoardService } from '../board.service';
 import { Board } from '../board';
 
-import io from 'socket.io-client';
+import { Globals } from '../globals';
 
 const NUM_PLAYERS = 2;
 const BOARD_SIZE = 9;
@@ -46,10 +46,10 @@ export class GameComponent {
 
     gameUrl: string = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
 
-    constructor(private boardService: BoardService, private toastr: ToastsManager, private _vcr: ViewContainerRef) {
+    constructor(private boardService: BoardService, private toastr: ToastsManager, private _vcr: ViewContainerRef, private globals: Globals) {
         this.toastr.setRootViewContainerRef(_vcr);
         this.createBoard();
-        this.socket = io('http://localhost:8000');
+        globals.getSocket().then(data => this.socket = data);
     }
 
     listenForChanges(): GameComponent {

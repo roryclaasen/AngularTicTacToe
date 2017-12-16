@@ -2,6 +2,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import io from 'socket.io-client';
 
+import { Globals } from './globals';
+
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -29,8 +31,8 @@ export class AppComponent {
 
     socket: any = null;
 
-    constructor() {
-        this.socket = io('http://localhost:8000');
+    constructor(private globals: Globals) {
+        globals.getSocket().then(data => this.socket = data);
     }
 
     validate(): void {
@@ -44,7 +46,7 @@ export class AppComponent {
                 this.inputLabel = 'Game Pin';
                 this.inputType = 'number';
             } else {
-                this.join(input);
+                this.joinServer(input);
             }
         }
     }
@@ -56,9 +58,26 @@ export class AppComponent {
         this.inputLabel = 'Username';
     }
 
+    joinServer(gamePin): void {
+        this.socket.emit('bored:join', {
+            token: gamePin,
+            name: this.username
+        });
+        this.socket.on('bored:joined', function (data) {
+            if (data.error) {
+                console.log(data.error);
+            } else {
+                console.log('Joined game %s', data.token);
+                this.join(data.token);
+            }
+        }.bind(this));
+    }
+
     createServer(): void {
-        console.log('Sending data to create new server');
         this.socket.emit('bored:new', this.username);
+        this.socket.on('bored:created', function (data) {
+            this.join(data.token);
+        }.bind(this));
     }
 
     join(gamePin): void {

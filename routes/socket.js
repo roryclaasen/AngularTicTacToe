@@ -1,58 +1,59 @@
 var gameBoreds = (function () {
     var boreds = {};
 
+    var randomToken = function() {
+        return Math.floor(100000 + Math.random() * 900000);
+    };
+
     var uniqueToken = function() {
-        return toString(Math.floor(100000 + Math.random() * 900000));
-    }
+        var token = randomToken();
+        do {
+            token = randomToken();
+        } while (boreds[token] !== undefined);
+        return token;
+    };
 
     var create = function(name) {
-        var token;
-        do {
-            token = uniqueToken();
-        } while(boreds[token] !== undefined);
-
         var bored = {
-            names: [name],
-            token: token,
+            names: [ name ],
+            token: uniqueToken(),
             turn: 0,
             tiles: []
         }
-        boreds[token] = bored;
-
+        boreds[bored.token] = bored;
         return bored;
     };
 
     var join = function(token, name) {
-        var bored = boreds[token];
-        if (bored === undefined) return {
-            result: "error",
-            message: "No Game exists with token"
-        }
+        console.log('token: %s, name: %s', token, name);
+        var bored = boreds[token.toString()];
 
+        if (bored === undefined) return {
+            error: 'No Game exists with token',
+            token: token
+        };
         if (bored.names.length == 2) return {
-            result: "error",
-            message: "This game is currently full"
-        }
+            error: 'This game is currently full'
+        };
 
         bored.names.push(name);
-        return {
-            result: "success",
-            message: "Added user to game"
-        }
-    }
+        boreds[token.toString()] = bored;
 
+        return bored;
+    };
+
+    // TODO Update function
     var get = function () {
         var res = [];
         for (user in names) {
             res.push(user);
         }
-
         return res;
     };
 
     var remove = function (token) {
-        if (boreds[token]) {
-            delete boreds[token];
+        if (boreds[token.toString()]) {
+            delete boreds[token.toString()];
             return true;
         }
         return false;
@@ -68,21 +69,24 @@ var gameBoreds = (function () {
 
 module.exports = function (socket) {
     socket.on('bored:new', function (data) {
-        var bored = gameBoreds.create(data.name);
-        console.log('Created New Board: %s', board);
-        socket.broadcast.emit('bored:created', bored);
+        var newBored = gameBoreds.create(data);
+        console.log('%s created New Board: %d', newBored.names[0], newBored.token);
+        socket.emit('bored:created', newBored);
     });
 
-    socket.on('send:message', function (data) {
-        socket.broadcast.emit('send:message', {
-            user: name,
-            text: data.message
-        });
+    socket.on('bored:join', function (data) {
+        var bored = gameBoreds.join(data.token, data.name);
+        if (bored.error) {
+            socket.emit('bored:joined', bored);
+        } else {
+            console.log('%s has joined game %s', bored.names[1], bored.token);
+            socket.emit('bored:joined', bored);
+        }
     });
 
     socket.on('bored:remove', function (data) {
         if (gameBoreds.remove(data.token)) {
-            socket.broadcast.emit('bored:removed', {
+            socket.emit('bored:removed', {
                 token: data.token 
             });
         }
