@@ -1,5 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
+import io from 'socket.io-client';
+
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -25,6 +27,12 @@ export class AppComponent {
         'username': undefined
     };
 
+    socket: any = null;
+
+    constructor() {
+        this.socket = io('http://localhost:8000');
+    }
+
     validate(): void {
         const input = this.input;
         const length = input.length;
@@ -49,7 +57,8 @@ export class AppComponent {
     }
 
     createServer(): void {
-        this.join(this.getUniqueId());
+        console.log('Sending data to create new server');
+        this.socket.emit('bored:new', this.username);
     }
 
     join(gamePin): void {
@@ -59,9 +68,5 @@ export class AppComponent {
             'username': this.username
         };
         this.loaded = true;
-    }
-
-    getUniqueId(): number {
-        return Math.floor(100000 + Math.random() * 900000);
     }
 }

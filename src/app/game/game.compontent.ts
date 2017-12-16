@@ -3,7 +3,8 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { BoardService } from '../board.service';
 import { Board } from '../board';
 
-declare const Pusher: any;
+import io from 'socket.io-client';
+
 const NUM_PLAYERS = 2;
 const BOARD_SIZE = 9;
 
@@ -16,7 +17,7 @@ const BOARD_SIZE = 9;
 
 export class GameComponent {
 
-    pusherChannel: any;
+    socket: any = null;
 
     canPlay = true;
     player = 0;
@@ -31,7 +32,6 @@ export class GameComponent {
     set gameData(value) {
         this._gameData = value;
         this.valuesEntered.next({ value: 'changed to ' + this._gameData });
-        this.initPusher();
         this.listenForChanges();
     }
 
@@ -49,31 +49,16 @@ export class GameComponent {
     constructor(private boardService: BoardService, private toastr: ToastsManager, private _vcr: ViewContainerRef) {
         this.toastr.setRootViewContainerRef(_vcr);
         this.createBoard();
-    }
-
-    initPusher(): GameComponent {
-        console.log(this.gameData);
-        const pusher = new Pusher('98657ea4123db5df46a6', {
-            authEndpoint: '/pusher/auth',
-            cluster: 'eu'
-        });
-        this.pusherChannel = pusher.subscribe(this.gameData.id);
-        this.pusherChannel.bind('pusher:member_added', member => this.players++);
-        this.pusherChannel.bind('pusher:subscription_succeeded', members => {
-            this.players = members.count;
-            this.setPlayer(this.players);
-            this.toastr.success('Success', 'Connected!');
-        });
-        this.pusherChannel.bind('pusher:member_removed', member => this.players--);
-
-        return this;
+        this.socket = io('http://localhost:8000');
     }
 
     listenForChanges(): GameComponent {
-        this.pusherChannel.bind('client-fire', (obj) => {
-            this.canPlay = !this.canPlay;
-            this.board[obj.boardId] = obj.board;
-        });
+    //     if (this.pusherChannel) {
+    //         this.pusherChannel.bind('client-fire', (obj) => {
+        //         this.canPlay = !this.canPlay;
+        //         this.board[obj.boardId] = obj.board;
+        //     });
+        // }
         return this;
     }
 
@@ -100,10 +85,10 @@ export class GameComponent {
 
         this.boardService.calculateResults();
 
-        this.pusherChannel.trigger('client-fire', {
-            player: this.player,
-            board: this.board
-        });
+        // this.pusherChannel.trigger('client-fire', {
+        //     player: this.player,
+        //     board: this.board
+        // });
 
         return this;
     }

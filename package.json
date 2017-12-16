@@ -14,7 +14,8 @@
     "start": "node server.js",
     "build": "ng build",
     "build.prod": "ng build --prod",
-    "deploy": "ng build --prod && git add dist -f && git commit -am 'deploying...' && git push heroku master && rd dist /q"
+    "deploy": "git commit -am 'deploying...' && git push heroku master",
+    "postinstall": "ng build --prod"
   },
   "engines": {
     "node": "~6.9.2",
@@ -41,9 +42,10 @@
     "jquery": "^3.2.1",
     "ng2-toastr": "^4.1.2",
     "popper.js": "^1.13.0",
-    "pusher": "^1.5.1",
-    "pusher-js": "^4.2.1",
     "rxjs": "^5.5.2",
+    "serve-favicon": "^2.4.5",
+    "socket.io": "^2.0.4",
+    "socket.io-client": "^2.0.4",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {

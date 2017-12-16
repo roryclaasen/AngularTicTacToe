@@ -1,45 +1,32 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-const path = require('path');
-var Pusher = require('pusher');
-const crypto = require("crypto");
-
-// For local env
 try { require('dotenv').config(); } catch (error) { }
 
+var express = require('express');
+var path = require('path');
+var favicon = require('serve-favicon');
+var bodyParser = require('body-parser');
+var routes = require('./routes/index');
 var app = express();
+
+var http = require('http');
+var server = http.createServer(app);
+var io = require('socket.io').listen(server);
+
+const port = process.env.PORT || 3000;
+console.log("Starting sevrer listening on http://localhost:%d", port);
+server.listen(port);
+io.set("origins", "*:*");
+
+io.on('connection', require('./routes/socket.js'));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'dist')));
+app.use('/', routes);
 
-app.use(express.static('./dist/'));
-
-app.all('/*', function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "*");
-    next();
+app.use(function (req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
-var pusher = new Pusher({
-    appId: process.env.APPID || 'YOUR_APP_ID',
-    key: process.env.KEY || 'YOUR_APP_KEY',
-    secret: process.env.SECRET || 'YOUR_APP_SECRET',
-    cluster: 'eu',
-    encrypted: true
-});
-
-app.post('/pusher/auth', function (req, res) {
-    var socketId = req.body.socket_id;
-    var channel = req.body.channel_name;
-    var presenceData = {
-        user_id: crypto.randomBytes(16).toString("hex")
-    };
-    var auth = pusher.authenticate(socketId, channel, presenceData);
-    res.send(auth);
-});
-
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist/index.html'));
-});
-
-var port = process.env.PORT || 3000;
-app.listen(port, () => console.log('Listening at http://localhost:' + port));
+module.exports = app;
