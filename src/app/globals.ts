@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+import { environment } from '../environments/environment';
+
 import io from 'socket.io-client';
 
 interface Response {
@@ -50,7 +52,11 @@ export class Globals {
             } else {
                 this.http.get<Response>('/getport').subscribe(data => {
                     this.socketPort = data['port'];
-                    this.socket = io('http://localhost:' + this.socketPort);
+                    let address = 'http://localhost:' + this.socketPort;
+                    if (environment.production) {
+                        address = 'https://localhost:' + this.socketPort;
+                    }
+                    this.socket = io(address);
                     resolve(this.socket);
                 });
             }
