@@ -13,6 +13,32 @@ export class Globals {
     socketPort: number;
     socket: any = null;
 
+    get NUM_PLAYERS(): number {
+        return 2;
+    }
+
+    get BOARD_SIZE(): number {
+        return 9;
+    }
+
+    get socketCommands() {
+        // TODO: Always Copy from socket.js
+        return {
+            board: {
+                new: 'board:new',
+                created: 'board:created',
+                updateTiles: 'board:updateTiles',
+                updated: 'board:updated',
+                remove: 'board:remove',
+                removed: 'board:removed'
+            },
+            game: {
+                join: 'board:join',
+                joined: 'board:joined'
+            }
+        };
+    }
+
     constructor(http: HttpClient) {
         this.http = http;
     }

@@ -1,18 +1,19 @@
 <div class="row">
     <div class="card mx-auto">
-        <div class="card-header" *ngIf="players < 2 ">Waiting for 2nd user to join...</div>
+        <div class="card-header" *ngIf="bored.players < 2 ">Waiting for 2nd user to join...</div>
         <div class="card-body">
-            <div class="card-text" *ngIf="players < 2 ">
+            <div class="card-text" *ngIf="bored.players < 2 ">
                 <h3>{{ gameData.username }}</h3>
                 Tell your friend to use <h4 class="font-weight-bold">{{ gameData.id }}</h4> as the game pin
             </div>
-            <div class="card-text" *ngIf="player > 1">
+            <!-- TODO: This needs to be updated -->
+            <div class="card-text" *ngIf="playerId > 1">
                 Sorry, only 2 players can play at a time. You can start your own game by visiting
                 <a href="{{ gameUrl }}">{{ gameUrl }}</a>
             </div>
         </div>
     </div>
-    <div *ngIf="players == 2">
+    <div *ngIf="bored.players == 2">
         <div class="col-7">
             <table class="grid is-bordered float-right">
                 <tbody>

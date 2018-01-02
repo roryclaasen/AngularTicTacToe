@@ -14,7 +14,7 @@ export class AppComponent {
     title = 'TicTacToe';
     navbar = false;
 
-    loaded = false; // false;
+    loaded = false;
 
     inputPrompt = 'Enter your username';
     inputLabel = 'Username';
@@ -59,11 +59,11 @@ export class AppComponent {
     }
 
     joinServer(gamePin): void {
-        this.socket.emit('bored:join', {
+        this.socket.emit(this.globals.socketCommands.game.join, {
             token: gamePin,
             name: this.username
         });
-        this.socket.on('bored:joined', function (data) {
+        this.socket.on(this.globals.socketCommands.game.joined, function (data) {
             if (data.error) {
                 console.log(data.error);
             } else {
@@ -74,8 +74,8 @@ export class AppComponent {
     }
 
     createServer(): void {
-        this.socket.emit('bored:new', this.username);
-        this.socket.on('bored:created', function (data) {
+        this.socket.emit(this.globals.socketCommands.board.new, this.username);
+        this.socket.on(this.globals.socketCommands.board.created, function (data) {
             this.join(data.token);
         }.bind(this));
     }

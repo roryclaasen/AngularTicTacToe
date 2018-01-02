@@ -5,9 +5,6 @@ import { Board } from '../board';
 
 import { Globals } from '../globals';
 
-const NUM_PLAYERS = 2;
-const BOARD_SIZE = 9;
-
 @Component({
     selector: 'app-game',
     templateUrl: './game.component.html',
@@ -18,10 +15,7 @@ const BOARD_SIZE = 9;
 export class GameComponent {
 
     socket: any = null;
-
-    canPlay = true;
-    player = 0;
-    players = 0;
+    playerId = 0;
 
     @Output()
     valuesEntered = new EventEmitter();
@@ -53,43 +47,47 @@ export class GameComponent {
     }
 
     listenForChanges(): GameComponent {
-    //     if (this.pusherChannel) {
-    //         this.pusherChannel.bind('client-fire', (obj) => {
-        //         this.canPlay = !this.canPlay;
-        //         this.board[obj.boardId] = obj.board;
-        //     });
-        // }
-        return this;
-    }
+        this.socket.on(this.globals.socketCommands.board.updated, function (data) {
+            if (this.board.token === this.gameData.id) {
+                this.board.names = data.names;
+                this.board.token = data.token;
+                this.board.turn = data.turn;
 
-    setPlayer(players: number = 0): GameComponent {
-        this.player = players - 1;
-        if (players === 1) {
-            this.canPlay = true;
-        } else if (players === 2) {
-            this.canPlay = false;
-        }
+                this.playerId = this.board.userId(this.gameData.username);
+                this.socket.emit(this.globals.socketCommands.board.updateTiles, {
+                    tiles: this.board.tiles,
+                    token: this.board.token
+                });
+            }
+            if (data.token === this.board.token) {
+                this.board.turn = data.turn;
+                this.board.tiles = data.tiles;
+
+                this.boardService.calculateResults();
+            }
+        }.bind(this));
         return this;
     }
 
     place(e: any): GameComponent {
-        const id = e.target.id, row = id.substring(1, 2), col = id.substring(2, 3), tile = this.board.tiles[row][col];
-        if (!this.checkValidHit(row, col, tile)) {
-            return;
+        if (this.currentTurn) {
+            const id = e.target.id, row = id.substring(1, 2), col = id.substring(2, 3), tile = this.board.tiles[row][col];
+            if (!this.checkValidHit(row, col, tile)) {
+                return;
+            }
+            this.currentY = row;
+            this.currentX = col;
+
+            this.board.tiles[row][col].used = true;
+            this.board.tiles[row][col].class = (this.playerId === 1) ? 'cross' : 'nought' ;
+
+            this.boardService.calculateResults();
+
+            this.socket.emit(this.globals.socketCommands.board.updateTiles, {
+                tiles: this.board.tiles,
+                token: this.board.token
+            });
         }
-        this.currentY = row;
-        this.currentX = col;
-
-        this.board.tiles[row][col].used = true;
-        this.board.tiles[row][col].class = (this.player === 1) ? 'cross' : 'nought' ; // TODO get player color
-
-        this.boardService.calculateResults();
-
-        // this.pusherChannel.trigger('client-fire', {
-        //     player: this.player,
-        //     board: this.board
-        // });
-
         return this;
     }
 
@@ -107,7 +105,7 @@ export class GameComponent {
     }
 
     createBoard(): GameComponent {
-        this.boardService.createBoard(BOARD_SIZE);
+        this.boardService.createBoard(this.globals.BOARD_SIZE);
         return this;
     }
 
@@ -133,7 +131,11 @@ export class GameComponent {
         return false;
     }
 
+    get currentTurn(): boolean {
+        return this.board.turn === this.playerId;
+    }
+
     get validPlayer(): boolean {
-        return (this.players >= NUM_PLAYERS) && (this.player < NUM_PLAYERS);
+        return (this.board.players >= this.globals.NUM_PLAYERS) && (this.playerId < this.globals.NUM_PLAYERS);
     }
 }
