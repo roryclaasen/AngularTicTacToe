@@ -23,20 +23,23 @@ export class Globals {
         return 9;
     }
 
+    gameUrl(includePort: boolean = true) {
+        return location.protocol + '//' + location.hostname + ((location.port && includePort) ? ':' + location.port : '');
+    }
+
     get socketCommands() {
         // TODO: Always Copy from socket.js
         return {
             board: {
                 new: 'board:new',
-                created: 'board:created',
                 updateTiles: 'board:updateTiles',
+                update: 'board:update',
                 updated: 'board:updated',
                 remove: 'board:remove',
                 removed: 'board:removed'
             },
             game: {
-                join: 'board:join',
-                joined: 'board:joined'
+                join: 'board:join'
             }
         };
     }
@@ -50,14 +53,20 @@ export class Globals {
             if (this.socket !== null) {
                 resolve(this.socket);
             } else {
-                this.http.get<Response>('/getport').subscribe(data => {
+                this.http.get<Response>(this.gameUrl() + '/getport').subscribe(data => {
                     this.socketPort = data['port'];
-                    let address = 'http://localhost:' + this.socketPort;
-                    if (environment.production) {
-                        address = 'https://localhost:' + this.socketPort;
-                    }
-                    this.socket = io(address);
+                    // let address ='http://localhost:' + this.socketPort;
+                    // if (environment.production) {
+                    //      address = 'https://localhost:' + this.socketPort;
+                    // }
+                    // this.socket = io(address);
+                    this.socket = io(this.gameUrl(false) + ':' + this.socketPort);
                     resolve(this.socket);
+                }, error => {
+                    console.log((error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'Server error');
+                    if (!environment.production) {
+                        console.log('Is the server running?');
+                    }
                 });
             }
         });

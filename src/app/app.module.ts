@@ -8,13 +8,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { ToastModule } from 'ng2-toastr/ng2-toastr';
 
 import { AppComponent } from './app.component';
-import { GameComponent } from './game/game.compontent';
 import { Globals } from './globals';
+import { GUID } from './guid';
 
 @NgModule({
     declarations: [
-        AppComponent,
-        GameComponent
+        AppComponent
     ],
     imports: [
         BrowserModule,
@@ -24,7 +23,7 @@ import { Globals } from './globals';
         ToastModule.forRoot(),
         HttpClientModule
     ],
-    providers: [ Globals ],
+    providers: [ Globals, GUID ],
     bootstrap: [ AppComponent ]
 })
 export class AppModule { }

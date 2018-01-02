@@ -22,7 +22,7 @@
     <div class="center">
         <div *ngIf="!loaded">
             <div class="mb-4 text-white text-center">
-                <h1>{{ (username.length > 0 ) ? username : 'Tic-Tac-Toe' }}</h1>
+                <h1>{{ (username.length > 0 ) ? username : title }}</h1>
             </div>
             
             <div class="card mx-auto" style="max-width: 30rem;">
@@ -30,8 +30,7 @@
                 <div class="card-body">
                     <div class="card-text">
                         <div class="input-group">
-                            <input type="{{ inputType }}" class="form-control" placeholder="{{ inputLabel }}" [attr.aria-label]="inputLabel" maxlength="{{ (inputType == 'text') ? 24 : 6 }}"
-                                [(ngModel)]='input'>
+                            <input type="{{ inputType }}" class="form-control" placeholder="{{ inputLabel }}" [attr.aria-label]="inputLabel" maxlength="{{ (inputType == 'text') ? 24 : 6 }}" [(ngModel)]='input'>
                         </div>
                     </div>
                     <button class="btn btn-warning mt-3 float-left" (click)='resetInputs()' *ngIf="username.length > 0">Back</button>
@@ -40,6 +39,51 @@
                 </div>
             </div>
         </div>
-        <app-game *ngIf="loaded" [gameData]="inputs"></app-game>
+
+        <div *ngIf="loaded" class="row">
+            <div class="card mx-auto" *ngIf="board.players != 2">
+                <div class="card-header" *ngIf="board.players < 2 ">Waiting for 2nd user to join...</div>
+                <div class="card-body">
+                    <div class="card-text" *ngIf="board.players < 2 ">
+                        <h3>{{ username }}</h3>
+                        Tell your friend to use
+                        <h4 class="font-weight-bold">{{ gamePin }}</h4> as the game pin
+                    </div>
+                    <!-- TODO: This needs to be updated -->
+                    <div class="card-text" *ngIf="playerId > 1">
+                        Sorry, only 2 players can play at a time. You can start your own game by visiting
+                        <a href="{{ gameUrl }}">{{ gameUrl }}</a>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="board.players == 2" class="col-7">
+                <table class="grid is-bordered float-right">
+                    <tbody>
+                        <tr *ngFor="let row of board.tiles; let y = index">
+                             <td *ngFor="let col of row; let x = index" (click)="place($event)" id="t{{y}}{{x}}" [ngClass]="validSector(y, x) ? '' : 'disabled'">
+                                <div class="color" [ngClass]="col.class"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div *ngIf="board.players == 2" class="col-5">
+                <div class="d-table h-100">
+                    <div class="d-table-cell align-middle h-100">
+                        <table class="grid is-bordered results float-left">
+                            <tbody>
+                                <tr *ngFor="let row of resultBoard.tiles; let y = index">
+                                    <td *ngFor="let col of row; let x = index" id="t{{y}}{{x}}">
+                                        <div class="color" [ngClass]="col.class"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

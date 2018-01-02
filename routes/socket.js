@@ -1,4 +1,4 @@
-var gameBoard = (function () {
+var gameBoards = (function () {
     var boards = {};
 
     var randomToken = function() {
@@ -9,7 +9,7 @@ var gameBoard = (function () {
         var token = randomToken();
         do {
             token = randomToken();
-        } while (boreds[token] !== undefined);
+        } while (boards[token] !== undefined);
         return token;
     };
 
@@ -25,13 +25,13 @@ var gameBoard = (function () {
     };
 
     var join = function(token, name) {
-        console.log('token: %s, name: %s', token, name);
         var board = boards[token.toString()];
 
         if (board === undefined) return {
             error: 'No Game exists with token',
             token: token
         };
+
         if (board.names.length == 2) return {
             error: 'This game is currently full'
         };
@@ -43,8 +43,8 @@ var gameBoard = (function () {
     };
 
     var get = function (token) {
-        if (boards[token.toString()]) {
-            return boards[token.toString()];
+        if (token !== undefined) {
+            if (boards[token.toString()]) return boards[token.toString()];
         }
         return undefined;
     };
@@ -77,31 +77,40 @@ module.exports = function (socket) {
     const commands = {
         board: {
             new: 'board:new',
-            created: 'board:created',
             updateTiles: 'board:updateTiles',
+            update: 'board:update',
             updated: 'board:updated',
             remove: 'board:remove',
             removed: 'board:removed'
         },
         game: {
-            join: 'board:join',
-            joined: 'board:joined'
+            join: 'board:join'
         }
     };
-    socket.on(commands.board.new, function (data) {
-        var newBoard = gameBoards.create(data);
-        console.log('%s created New Board: %d', newBoard.names[0], newBoard.token);
-        socket.emit(commands.board.created, newBoard);
+
+    socket.on(commands.board.new, function (data, callback) {
+        var newBoard = gameBoards.create(data.username);
+        console.log('%s (%s) created New Board: %d', newBoard.names[0], data.guid, newBoard.token);
+        callback({
+            board: newBoard,
+            guid: data.guid
+        });
     });
 
-    socket.on(commands.game.join, function (data) {
+    socket.on(commands.game.join, function (data, callback) {
         var board = gameBoards.join(data.token, data.name);
         if (board.error) {
-            socket.emit(commands.game.joined, board);
+            console.log('%s failed to join %s, reason: %s', data.name, data.token, board.error);
+            callback(board);
         } else {
             console.log('%s has joined game %s', board.names[1], board.token);
-            socket.emit(commands.game.joined, board);
+            callback(board);
         }
+    });
+
+    socket.on(commands.board.update, function (data) {
+        var board = gameBoards.get(data);
+        socket.emit(commands.board.updated, board);
     });
 
     socket.on(commands.board.updateTiles, function (data) {
@@ -109,7 +118,7 @@ module.exports = function (socket) {
         if (board) {
             board.tiles = data.tiles;
             gameBoards.set(data.token, board);
-            socket.emit(commands.board.updateTiles, board);
+            socket.emit(commands.board.updated, board);
         }
     });
 
@@ -119,5 +128,9 @@ module.exports = function (socket) {
                 token: data.token 
             });
         }
+    });
+
+    socket.on('disconnect', function (data) {
+        // TODO Remove game board if created
     });
 };

@@ -1,0 +1,61 @@
+$cellSize: 50px;
+
+table.grid {
+    $border-thin: solid 1px black;
+    $border-thick: solid 4px black;
+
+    border: $border-thick;
+    margin: auto;
+
+    &:not(.results) {
+        tr {
+            &:nth-child(3), &:nth-child(6) {
+                border-bottom: $border-thick;
+            }
+
+            td {
+                border: $border-thin;
+
+                &:nth-child(3), &:nth-child(6) {
+                    border-right: $border-thick;
+                }
+
+                &:not(.disabled) {
+                    &:hover {
+                        background-color: darken(white, 20%);
+                        cursor: pointer;
+                    }
+                }               
+            }
+        }
+    }
+    tr {
+        td {
+            border: $border-thin;
+
+            width: $cellSize;
+            height: $cellSize;
+
+            padding: 0;
+
+            background: white;           
+
+            &.disabled {  background-color: darken(white, 60%); cursor: default }
+
+            .color {
+                &.cross {
+                    background-color: red;
+                }
+
+                &.nought {
+                    background-color: blue;
+                }
+            }
+
+            .color {
+                height: 100%;
+                pointer-events: none;
+            }
+        }
+    }
+}
