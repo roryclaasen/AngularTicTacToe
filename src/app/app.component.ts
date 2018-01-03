@@ -76,38 +76,40 @@ export class AppComponent {
     }
 
     joinServer(gamePin): void {
-        const game = this;
         this.socket.emit(this.globals.socketCommands.game.join, {
             token: gamePin,
             name: this.username
-        }, function (data) {
-            if (data.error) {
-                console.log(data.error);
-                alert(data.error);
-            } else {
-                console.log('Joined game %s', data.token);
-                game.gamePin = data.token;
-                game.join(data);
-                game.sendUpdateNotification();
-            }
-        });
+        }, (data) => this.serverJoined(data));
     }
 
     createServer(): void {
         const id = new GUID();
-        const game = this;
         this.socket.emit(this.globals.socketCommands.board.new, {
             username: this.username,
             guid: id.toString()
-        }, function (data) {
-            if (data.guid === id.toString()) {
-                game.gamePin = data.board.token;
+        }, (data) => this.serverCreated(id.toString(), data));
+    }
 
-                game.sendUpdateTilesNotification();
+    serverJoined(data) {
+        if (data.error) {
+            console.log(data.error);
+            alert(data.error);
+        } else {
+            console.log('Joined game %s', data.token);
+            this.gamePin = data.token;
+            this.join(data);
+            this.sendUpdateNotification();
+        }
+    }
 
-                game.join(data.board);
-            }
-        });
+    serverCreated(id, data) {
+        if (data.guid === id) {
+            console.log(this.gamePin);
+            this.gamePin = data.board.token;
+            console.log(this.gamePin);
+            this.sendUpdateTilesNotification();
+            this.join(data.board);
+        }
     }
 
     join(serverBoard): void {
@@ -147,15 +149,15 @@ export class AppComponent {
         const game = this;
         console.log('listen for changes');
         this.socket.on(this.globals.socketCommands.board.updated, function (data) {
-            console.log('%s === %s', this.gamePin, data.token);
-            if (data.token === this.gamePin) {
-                console.log(data);
-                this.syncBoardFromSever(data);
+            console.log('%s === %s', game.gamePin, data.token);
+            console.log(data);
+            if (data.token === game.gamePin) {
+                game.syncBoardFromSever(data);
 
-                this.boardService.calculateResults();
+                game.boardService.calculateResults();
             }
             // game.listenForChanges();
-        }.bind(this));
+        }); // .bind(this)
     }
 
     place(e: any): AppComponent {

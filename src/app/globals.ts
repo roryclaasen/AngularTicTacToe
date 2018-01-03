@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../environments/environment';
 
-import io from 'socket.io-client';
+import * as io from 'socket.io-client';
 
 interface Response {
     results: string[];

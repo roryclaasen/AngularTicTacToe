@@ -110,7 +110,8 @@ module.exports = function (socket) {
 
     socket.on(commands.board.update, function (data) {
         var board = gameBoards.get(data);
-        socket.emit(commands.board.updated, board);
+        console.log('Updating board (%s)', board.token)
+        socket.broadcast.emit(commands.board.updated, board);
     });
 
     socket.on(commands.board.updateTiles, function (data) {
@@ -118,13 +119,13 @@ module.exports = function (socket) {
         if (board) {
             board.tiles = data.tiles;
             gameBoards.set(data.token, board);
-            socket.emit(commands.board.updated, board);
+            socket.broadcast.emit(commands.board.updated, board);
         }
     });
 
     socket.on(commands.board.remove, function (data) {
         if (gameBoards.remove(data.token)) {
-            socket.emit(commands.board.removed, {
+            socket.broadcast.emit(commands.board.removed, {
                 token: data.token 
             });
         }
