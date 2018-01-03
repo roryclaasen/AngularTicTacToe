@@ -15,7 +15,7 @@ import { GUID } from './guid';
 })
 
 export class AppComponent {
-    title = 'TicTacToe';
+    title = 'Tic-Tac-Toe';
     navbar = false;
 
     // Login Vars
