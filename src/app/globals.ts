@@ -65,7 +65,7 @@ export class Globals {
                     //      address = 'https://localhost:' + this.socketPort;
                     // }
                     // this.socket = io(address);
-                    this.socket = io(this.gameUrl(false) + ':' + this.socketPort);
+                    this.socket = io(this.gameUrl(false)); // + ':' + this.socketPort);
                     resolve(this.socket);
                 }, error => {
                     console.log((error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'Server error');
