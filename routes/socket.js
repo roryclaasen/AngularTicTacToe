@@ -18,7 +18,10 @@ var gameBoards = (function () {
             names: [ name ],
             token: uniqueToken(),
             turn: 0,
-            tiles: []
+            tiles: [],
+            currentX: undefined,
+            currentY: undefined,
+            winner: false
         }
         boards[board.token] = board;
         return board;
@@ -78,6 +81,7 @@ module.exports = function (socket) {
         board: {
             new: 'board:new',
             updateTiles: 'board:updateTiles',
+            place: 'board:place',
             update: 'board:update',
             updated: 'board:updated',
             remove: 'board:remove',
@@ -120,6 +124,32 @@ module.exports = function (socket) {
             board.tiles = data.tiles;
             gameBoards.set(data.token, board);
             socket.broadcast.emit(commands.board.updated, board);
+        }
+    });
+
+    socket.on(commands.board.place, function (data, callback) {
+        var board = gameBoards.get(data.token);
+        if (board) {
+            console.log('Placing');
+            console.log(data);
+            const col = data.placeX, row = data.placeY;
+            if (board.tiles[row][col].used == false) {
+                // TODO Also check if the game has been won
+
+                board.currentX = col;
+                board.currentY = row;
+
+                board.tiles[row][col].used = true;
+                board.tiles[row][col].class = (board.turn) ? 'cross' : 'nought';
+
+                board.turn = (board.turn == 0) ? 1 : 0;
+
+                // Calculate Winning Results
+
+                gameBoards.set(data.token, board);               
+            }
+            socket.broadcast.emit(commands.board.updated, board);
+            callback(board);
         }
     });
 

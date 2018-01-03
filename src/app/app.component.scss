@@ -1,5 +1,13 @@
 $cellSize: 50px;
 
+.turnMessage {
+    color: white;
+    .msg {
+        margin: auto;
+        padding-bottom: 15px;
+    }
+}
+
 table.grid {
     $border-thin: solid 1px black;
     $border-thick: solid 4px black;

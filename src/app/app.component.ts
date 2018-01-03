@@ -36,11 +36,6 @@ export class AppComponent {
 
     playerId = 0;
 
-    winner = false;
-
-    currentY: number;
-    currentX: number;
-
     gameUrl: string;
 
     // Login
@@ -104,9 +99,8 @@ export class AppComponent {
 
     serverCreated(id, data) {
         if (data.guid === id) {
-            console.log(this.gamePin);
+            console.log('Created game %s', data.board.token);
             this.gamePin = data.board.token;
-            console.log(this.gamePin);
             this.sendUpdateTilesNotification();
             this.join(data.board);
         }
@@ -115,7 +109,7 @@ export class AppComponent {
     join(serverBoard): void {
         if (serverBoard) {
             if (this.gamePin === serverBoard.token) {
-                this.syncBoardFromSever(serverBoard);
+                this.syncBoardFromSever(serverBoard, false);
                 this.playerId = this.board.userId(this.username);
             }
         }
@@ -136,63 +130,52 @@ export class AppComponent {
         });
     }
 
-    syncBoardFromSever(serverBoard) {
+    syncBoardFromSever(serverBoard, calculateResults: boolean = true) {
         if (serverBoard) {
-            this.board.names = serverBoard.names;
-            this.board.token = serverBoard.token;
-            this.board.turn = serverBoard.turn;
-            this.board.tiles = serverBoard.tiles;
+            this.board.update(serverBoard);
+            if (calculateResults) {
+                this.boardService.calculateResults();
+            }
         }
     }
 
     listenForChanges() {
         const game = this;
-        console.log('listen for changes');
         this.socket.on(this.globals.socketCommands.board.updated, function (data) {
-            console.log('%s === %s', game.gamePin, data.token);
             console.log(data);
             if (data.token === game.gamePin) {
                 game.syncBoardFromSever(data);
-
-                game.boardService.calculateResults();
             }
-            // game.listenForChanges();
-        }); // .bind(this)
+        });
     }
 
     place(e: any): AppComponent {
+        const game = this;
         if (this.currentTurn) {
-            const id = e.target.id, row = id.substring(1, 2), col = id.substring(2, 3), tile = this.board.tiles[row][col];
-            if (!this.checkValidHit(row, col, tile)) {
-                return;
-            }
-            this.currentY = row;
-            this.currentX = col;
-
-            this.board.tiles[row][col].used = true;
-            this.board.tiles[row][col].class = (this.playerId === 1) ? 'cross' : 'nought';
-
-            this.boardService.calculateResults();
-
-            this.socket.emit(this.globals.socketCommands.board.updateTiles, {
-                tiles: this.board.tiles,
-                token: this.board.token
+            const id = e.target.id, row = id.substring(1, 2), col = id.substring(2, 3);
+            this.socket.emit(this.globals.socketCommands.board.place, {
+                token: this.board.token,
+                placeX: col,
+                placeY: row
+            }, function(board) {
+                game.syncBoardFromSever(board);
             });
         }
         return this;
     }
 
-    checkValidHit(row: number, col: number, tile: any): boolean {
-        if (this.winner) {
-            return false;
+    validSector(row, col) {
+        if (this.board.currentY === undefined && this.board.currentX === undefined) {
+            return true;
         }
-        if (tile.class.length > 0) {
-            return false;
+
+        if (Math.floor(row / 3) === this.board.currentY % 3) {
+            if (Math.floor(col / 3) === this.board.currentX % 3) {
+                return true;
+            }
         }
-        if (!this.validSector(row, col)) {
-            return false;
-        }
-        return true;
+
+        return false;
     }
 
     createBoard(): AppComponent {
@@ -208,22 +191,15 @@ export class AppComponent {
         return this.boardService.getResultBoard();
     }
 
-    validSector(row: number, col: number): boolean {
-        if (this.currentY === undefined && this.currentX === undefined) {
-            return true;
-        }
-
-        if (Math.floor(row / 3) === this.currentY % 3) {
-            if (Math.floor(col / 3) === this.currentX % 3) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     get currentTurn(): boolean {
         return this.board.turn === this.playerId;
+    }
+
+    get currentTurnMessage(): String {
+        if (this.currentTurn) {
+            return 'It is your turn!';
+        }
+        return 'It is ' + this.board.names[this.playerId === 1 ? 0 : 1] + '\'s turn!';
     }
 
     get validPlayer(): boolean {

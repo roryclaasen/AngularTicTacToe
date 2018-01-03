@@ -3,8 +3,15 @@ export class Board {
     token: number;
     turn: number;
     tiles: Object[];
+    currentX: number;
+    currentY: number;
+    winner: boolean;
 
     constructor(values: Object = {}) {
+        this.update(values);
+    }
+
+    update(values: Object = {}) {
         Object.assign(this, values);
     }
 

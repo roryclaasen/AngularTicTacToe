@@ -33,6 +33,7 @@ export class Globals {
             board: {
                 new: 'board:new',
                 updateTiles: 'board:updateTiles',
+                place: 'board:place',
                 update: 'board:update',
                 updated: 'board:updated',
                 remove: 'board:remove',
