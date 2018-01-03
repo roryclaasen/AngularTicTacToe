@@ -1,6 +1,6 @@
-<nav class="navbar navbar-dark bg-dark navbar-expand-lg" *ngIf="navbar">
+<nav class="navbar navbar-dark navbar-expand-lg" *ngIf="navbar">
     <a class="navbar-brand" href="/">
-        <img src="favicon.ico" width="30" height="30" class="d-inline-block align-top" alt="">
+        <img src="/favicon.ico" width="30" height="30" class="d-inline-block align-top" alt="">
         {{ title }}
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -9,7 +9,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="/index.html">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="https://github.com/roryclaasen/AngularTicTacToe/">Source Code</a>
@@ -17,76 +17,72 @@
         </ul>
     </div>
 </nav>
-
 <div class="layout">
     <div class="center">
-        <div *ngIf="!loaded">
-            <div class="mb-4 text-white text-center">
-                <h1>{{ (username.length > 0 ) ? username : title }}</h1>
+        <div class="container">
+            <div *ngIf="!loaded">
+                <div class="mb-4 text-white text-center">
+                    <h1>{{ (username.length > 0 ) ? username : title }}</h1>
+                </div>
+                
+                <div class="card mx-auto" style="max-width: 30rem;">
+                    <div class="card-header">{{ inputPrompt }}</div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <div class="input-group">
+                                <input type="{{ inputType }}" class="form-control" placeholder="{{ inputLabel }}" [attr.aria-label]="inputLabel" maxlength="{{ (inputType == 'text') ? 24 : 6 }}" [(ngModel)]='input'>
+                            </div>
+                        </div>
+                        <button class="btn btn-warning mt-3 float-left" (click)='resetInputs()' *ngIf="username.length > 0">Back</button>
+                        <button class="btn btn-success mt-3 ml-2 float-right" (click)='validate()' [ngClass]="(input.length==0) ? 'disabled' : ''">Continue</button>
+                        <button class="btn btn-primary mt-3 float-right" (click)='createServer()' *ngIf="username.length > 0">Create Server</button>
+                    </div>
+                </div>
             </div>
-            
-            <div class="card mx-auto" style="max-width: 30rem;">
-                <div class="card-header">{{ inputPrompt }}</div>
-                <div class="card-body">
-                    <div class="card-text">
-                        <div class="input-group">
-                            <input type="{{ inputType }}" class="form-control" placeholder="{{ inputLabel }}" [attr.aria-label]="inputLabel" maxlength="{{ (inputType == 'text') ? 24 : 6 }}" [(ngModel)]='input'>
+
+            <div *ngIf="loaded" class="row">
+                <div class="card mx-auto" *ngIf="board.players != 2">
+                    <div class="card-header" *ngIf="board.players < 2 ">Waiting for 2nd user to join...</div>
+                    <div class="card-body">
+                        <div class="card-text" *ngIf="board.players < 2 ">
+                            <h3>{{ username }}</h3>
+                            Tell your friend to use
+                            <h4 class="font-weight-bold">{{ gamePin }}</h4> as the game pin
                         </div>
                     </div>
-                    <button class="btn btn-warning mt-3 float-left" (click)='resetInputs()' *ngIf="username.length > 0">Back</button>
-                    <button class="btn btn-success mt-3 ml-2 float-right" (click)='validate()' [ngClass]="(input.length==0) ? 'disabled' : ''">Continue</button>
-                    <button class="btn btn-primary mt-3 float-right" (click)='createServer()' *ngIf="username.length > 0">Create Server</button>
-                </div>
-            </div>
-        </div>
-
-        <div *ngIf="loaded" class="row">
-            <div class="card mx-auto" *ngIf="board.players != 2">
-                <div class="card-header" *ngIf="board.players < 2 ">Waiting for 2nd user to join...</div>
-                <div class="card-body">
-                    <div class="card-text" *ngIf="board.players < 2 ">
-                        <h3>{{ username }}</h3>
-                        Tell your friend to use
-                        <h4 class="font-weight-bold">{{ gamePin }}</h4> as the game pin
-                    </div>
-                    <!-- TODO: This needs to be updated -->
-                    <div class="card-text" *ngIf="playerId > 1">
-                        Sorry, only 2 players can play at a time. You can start your own game by visiting
-                        <a href="{{ gameUrl }}">{{ gameUrl }}</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col" *ngIf="board.players == 2">
-                <div class="row turnMessage">
-                    <h3 class="msg">{{ currentTurnMessage }}</h3>
                 </div>
 
-                <div class="row">
-                    <div class="col-7">
-                        <table class="grid is-bordered float-right">
-                            <tbody>
-                                <tr *ngFor="let row of board.tiles; let y = index">
-                                    <td *ngFor="let col of row; let x = index" (click)="place($event)" id="t{{y}}{{x}}" [ngClass]="validSector(y, x) ? '' : 'disabled'">
-                                        <div class="color" [ngClass]="col.class"></div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <div class="col" *ngIf="board.players == 2">
+                    <div class="row turnMessage">
+                        <h3 class="msg">{{ currentTurnMessage }}</h3>
                     </div>
 
-                    <div class="col-5">
-                        <div class="d-table h-100">
-                            <div class="d-table-cell align-middle h-100">
-                                <table class="grid is-bordered results float-left">
-                                    <tbody>
-                                        <tr *ngFor="let row of resultBoard.tiles; let y = index">
-                                            <td *ngFor="let col of row; let x = index" id="t{{y}}{{x}}">
-                                                <div class="color" [ngClass]="col.class"></div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                    <div class="row tables">
+                        <div class="col-sm-7">
+                            <table class="grid is-bordered float-right" [ngClass]="cssCurrentPlayerColor">
+                                <tbody [ngClass]="currentTurn ? '' : 'notCurrentTurn'">
+                                    <tr *ngFor="let row of board.tiles; let y = index">
+                                        <td *ngFor="let col of row; let x = index" (click)="place($event)" id="t{{y}}{{x}}" [ngClass]="validSector(y, x) ? '' : 'disabled'">
+                                            <div class="color" [ngClass]="col.class"></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="col-sm-5">
+                            <div class="d-table h-100 results">
+                                <div class="d-table-cell align-middle h-100">
+                                    <table class="grid is-bordered results float-left">
+                                        <tbody>
+                                            <tr *ngFor="let row of resultBoard.tiles; let y = index">
+                                                <td *ngFor="let col of row; let x = index" id="t{{y}}{{x}}">
+                                                    <div class="color" [ngClass]="col.class"></div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

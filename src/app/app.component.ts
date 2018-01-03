@@ -16,7 +16,9 @@ import { GUID } from './guid';
 
 export class AppComponent {
     title = 'Tic-Tac-Toe';
-    navbar = false;
+    navbar = true;
+
+    globals;
 
     // Login Vars
 
@@ -40,7 +42,8 @@ export class AppComponent {
 
     // Login
 
-    constructor(private boardService: BoardService, private toastr: ToastsManager, private _vcr: ViewContainerRef, private globals: Globals) {
+    constructor(private boardService: BoardService, private toastr: ToastsManager, private _vcr: ViewContainerRef, globals: Globals) {
+        this.globals = globals;
         globals.getSocket().then(data => this.socket = data);
         this.toastr.setRootViewContainerRef(_vcr);
         this.boardService.createBoard();
@@ -113,6 +116,7 @@ export class AppComponent {
                 this.playerId = this.board.userId(this.username);
             }
         }
+
         this.loaded = true;
         this.listenForChanges();
     }
@@ -141,10 +145,14 @@ export class AppComponent {
 
     listenForChanges() {
         const game = this;
+        const oldTurn = this.board.turn;
         this.socket.on(this.globals.socketCommands.board.updated, function (data) {
             console.log(data);
             if (data.token === game.gamePin) {
                 game.syncBoardFromSever(data);
+                if (oldTurn !== game.board.turn) {
+                    // TODO Play sound
+                }
             }
         });
     }
@@ -153,13 +161,15 @@ export class AppComponent {
         const game = this;
         if (this.currentTurn) {
             const id = e.target.id, row = id.substring(1, 2), col = id.substring(2, 3);
-            this.socket.emit(this.globals.socketCommands.board.place, {
-                token: this.board.token,
-                placeX: col,
-                placeY: row
-            }, function(board) {
-                game.syncBoardFromSever(board);
-            });
+            if (this.validSector(row, col)) {
+                this.socket.emit(this.globals.socketCommands.board.place, {
+                    token: this.board.token,
+                    placeX: col,
+                    placeY: row
+                }, function(board) {
+                    game.syncBoardFromSever(board);
+                });
+            }
         }
         return this;
     }
@@ -173,6 +183,24 @@ export class AppComponent {
             if (Math.floor(col / 3) === this.board.currentX % 3) {
                 return true;
             }
+        }
+
+        let filled = true;
+        const sectorX = Math.floor(col / 3) * 3;
+        const sectorY = Math.floor(row / 3) * 3;
+        for (let y = 0; y < this.globals.GRID_SIZE; y++) {
+            for (let x = 0; x < this.globals.GRID_SIZE; x++) {
+                if (!filled) {
+                    continue;
+                }
+                if (this.board.tiles[sectorY + y][sectorX + x].used === false) {
+                    filled = false;
+                }
+            }
+        }
+
+        if (filled) {
+            return true;
         }
 
         return false;
@@ -202,7 +230,10 @@ export class AppComponent {
         return 'It is ' + this.board.names[this.playerId === 1 ? 0 : 1] + '\'s turn!';
     }
 
-    get validPlayer(): boolean {
-        return (this.board.players >= this.globals.NUM_PLAYERS) && (this.playerId < this.globals.NUM_PLAYERS);
+    get cssCurrentPlayerColor(): String {
+        if (this.board.turn === 1) {
+            return 'border-cross';
+        }
+        return 'border-nought';
     }
 }

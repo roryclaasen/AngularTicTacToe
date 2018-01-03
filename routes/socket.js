@@ -76,7 +76,6 @@ var gameBoards = (function () {
 }());
 
 module.exports = function (socket) {
-
     const commands = {
         board: {
             new: 'board:new',
@@ -130,10 +129,8 @@ module.exports = function (socket) {
     socket.on(commands.board.place, function (data, callback) {
         var board = gameBoards.get(data.token);
         if (board) {
-            console.log('Placing');
-            console.log(data);
             const col = data.placeX, row = data.placeY;
-            if (board.tiles[row][col].used == false) {
+            if (board.tiles[row][col].used == false && validSector(board, row, col)) {
                 // TODO Also check if the game has been won
 
                 board.currentX = col;
@@ -146,10 +143,11 @@ module.exports = function (socket) {
 
                 // Calculate Winning Results
 
-                gameBoards.set(data.token, board);               
+                gameBoards.set(data.token, board);
+
+                socket.broadcast.emit(commands.board.updated, board);
+                callback(board);               
             }
-            socket.broadcast.emit(commands.board.updated, board);
-            callback(board);
         }
     });
 
@@ -161,7 +159,28 @@ module.exports = function (socket) {
         }
     });
 
-    socket.on('disconnect', function (data) {
-        // TODO Remove game board if created
+    socket.on('disconnect', function (reason) {
+        console.log(reason);
     });
+
+    var validSector = function(board, row, col) {
+        if (board.currentY == undefined && board.currentX == undefined) return true;
+
+        if (Math.floor(row / 3) == board.currentY % 3) {
+            if (Math.floor(col / 3) == board.currentX % 3) return true;
+        }
+
+        var filled = true;
+        const sectorX = Math.floor(col / 3) * 3;
+        const sectorY = Math.floor(row / 3) * 3;
+        for (let y = 0; y < 3; y++) {
+            for (let x = 0; x < 3; x++) {
+                if (!filled) continue;
+                if (this.board.tiles[sectorY + y][sectorX + x].used === false) filled = false;
+            }
+        }
+        if (filled) return true;
+        
+        return false;
+    }
 };

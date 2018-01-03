@@ -1,10 +1,23 @@
+nav.navbar {
+    z-index: 100;
+}
+
 $cellSize: 50px;
+$cellSmall: 40px;
 
 .turnMessage {
     color: white;
     .msg {
         margin: auto;
         padding-bottom: 15px;
+    }
+}
+
+.results {
+    margin: auto;
+    @media (max-width: 767.99px) {
+        padding-top: 20px;
+        padding-bottom: 20px;
     }
 }
 
@@ -16,54 +29,54 @@ table.grid {
     margin: auto;
 
     &:not(.results) {
-        tr {
-            &:nth-child(3), &:nth-child(6) {
-                border-bottom: $border-thick;
-            }
-
-            td {
-                border: $border-thin;
-
-                &:nth-child(3), &:nth-child(6) {
-                    border-right: $border-thick;
-                }
-
-                &:not(.disabled) {
-                    &:hover {
-                        background-color: darken(white, 20%);
-                        cursor: pointer;
-                    }
-                }               
-            }
-        }
-    }
-    tr {
-        td {
-            border: $border-thin;
-
-            width: $cellSize;
-            height: $cellSize;
-
-            padding: 0;
-
-            background: white;           
-
-            &.disabled {  background-color: darken(white, 60%); cursor: default }
-
-            .color {
-                &.cross {
-                    background-color: red;
-                }
-
-                &.nought {
-                    background-color: blue;
-                }
-            }
-
-            .color {
-                height: 100%;
+        &.border-cross { border-color: red; }
+        &.border-nought { border-color: blue; }
+            .notCurrentTurn td:not(.disabled) {
+                background: darken(white, 15%) !important;
+                cursor: default;
                 pointer-events: none;
             }
+            
+            tr {
+                &:nth-child(3), &:nth-child(6) { border-bottom: $border-thick; }
+
+                td {
+                    border: $border-thin;
+
+                    &:nth-child(3), &:nth-child(6) { border-right: $border-thick; }
+
+                    &:not(.disabled) {
+                        &:hover {
+                            background-color: darken(white, 20%);
+                            cursor: pointer;
+                        }
+                    }               
+                }
+        }
+    }
+    tr td {
+        border: $border-thin;
+
+        width: $cellSize;
+        height: $cellSize;
+        
+        @media (max-width: 767.99px) {
+            width: $cellSmall;
+            height: $cellSmall;
+        }
+
+        padding: 0;
+
+        background: white;           
+
+        &.disabled { background-color: darken(white, 60%); cursor: default; pointer-events: none;}
+
+        .color {
+            pointer-events: none;
+            height: 100%;
+            cursor: default;
+            &.cross { background-color: red; }
+            &.nought { background-color: blue; }
         }
     }
 }

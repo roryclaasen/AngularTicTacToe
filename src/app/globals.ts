@@ -23,6 +23,10 @@ export class Globals {
         return 9;
     }
 
+    get GRID_SIZE(): number {
+        return 3;
+    }
+
     gameUrl(includePort: boolean = true) {
         return location.protocol + '//' + location.hostname + ((location.port && includePort) ? ':' + location.port : '');
     }
