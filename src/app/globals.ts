@@ -24,10 +24,6 @@ export class Globals {
     }
 
     gameUrl(includePort: boolean = true) {
-        // TODO TempFix
-        if (environment.production) {
-            return 'https://angulartictactoe.herokuapp.com' + ((location.port && includePort) ? ':' + location.port : '');
-        }
         return location.protocol + '//' + location.hostname + ((location.port && includePort) ? ':' + location.port : '');
     }
 
@@ -58,21 +54,8 @@ export class Globals {
             if (this.socket !== null) {
                 resolve(this.socket);
             } else {
-                this.http.get<Response>(this.gameUrl() + '/getport').subscribe(data => {
-                    this.socketPort = data['port'];
-                    // let address ='http://localhost:' + this.socketPort;
-                    // if (environment.production) {
-                    //      address = 'https://localhost:' + this.socketPort;
-                    // }
-                    // this.socket = io(address);
-                    this.socket = io(this.gameUrl(false)); // + ':' + this.socketPort);
-                    resolve(this.socket);
-                }, error => {
-                    console.log((error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'Server error');
-                    if (!environment.production) {
-                        console.log('Is the server running?');
-                    }
-                });
+                this.socket = io(this.gameUrl());
+                resolve(this.socket);
             }
         });
         return promise;
