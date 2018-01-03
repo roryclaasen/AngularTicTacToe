@@ -26,7 +26,7 @@ export class Globals {
     gameUrl(includePort: boolean = true) {
         // TODO TempFix
         if (environment.production) {
-            return 'https://angulartictactoe.herokuapp.com:' + ((location.port && includePort) ? ':' + location.port : '');
+            return 'https://angulartictactoe.herokuapp.com' + ((location.port && includePort) ? ':' + location.port : '');
         }
         return location.protocol + '//' + location.hostname + ((location.port && includePort) ? ':' + location.port : '');
     }
