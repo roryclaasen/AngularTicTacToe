@@ -13,7 +13,7 @@ var gameBoards = (function () {
         return token;
     };
 
-    var create = function(name) {
+    var create = function(name, socketId) {
         var board = {
             names: [ name ],
             token: uniqueToken(),
@@ -27,7 +27,7 @@ var gameBoards = (function () {
         return board;
     };
 
-    var join = function(token, name) {
+    var join = function(token, name, socketId) {
         var board = boards[token.toString()];
 
         if (board === undefined) return {
@@ -58,6 +58,7 @@ var gameBoards = (function () {
         }
     };
 
+    // TODO Test this function
     var remove = function (token) {
         if (boards[token.toString()]) {
             delete boards[token.toString()];
@@ -86,14 +87,22 @@ module.exports = function (socket) {
             remove: 'board:remove',
             removed: 'board:removed'
         },
+        user: {
+            disconnected: 'user:left'
+        },
         game: {
             join: 'board:join'
         }
     };
 
+    var username = undefined;
+    var token = undefined;
+
     socket.on(commands.board.new, function (data, callback) {
         var newBoard = gameBoards.create(data.username);
         console.log('%s (%s) created New Board: %d', newBoard.names[0], data.guid, newBoard.token);
+        username = data.username;
+        token = newBoard.token;
         callback({
             board: newBoard,
             guid: data.guid
@@ -102,6 +111,8 @@ module.exports = function (socket) {
 
     socket.on(commands.game.join, function (data, callback) {
         var board = gameBoards.join(data.token, data.name);
+        username = data.name;
+        token = data.token;
         if (board.error) {
             console.log('%s failed to join %s, reason: %s', data.name, data.token, board.error);
             callback(board);
@@ -113,7 +124,7 @@ module.exports = function (socket) {
 
     socket.on(commands.board.update, function (data) {
         var board = gameBoards.get(data);
-        console.log('Updating board (%s)', board.token)
+        // console.log('Updating board (%s)', board.token)
         socket.broadcast.emit(commands.board.updated, board);
     });
 
@@ -160,7 +171,16 @@ module.exports = function (socket) {
     });
 
     socket.on('disconnect', function (reason) {
-        console.log(reason);
+        if (token) {
+            socket.broadcast.emit(commands.user.disconnected, {
+                reason: reason,
+                name: username,
+                token: token
+            });
+            console.log('User left (%s, %s), removing board %s', username, socket.id, token);
+
+            gameBoards.remove(token);
+        }
     });
 
     var validSector = function(board, row, col) {
@@ -171,12 +191,12 @@ module.exports = function (socket) {
         }
 
         var filled = true;
-        const sectorX = Math.floor(col / 3) * 3;
-        const sectorY = Math.floor(row / 3) * 3;
+        const sectorX = Math.floor(board.currentXcol % 3) * 3;
+        const sectorY = Math.floor(board.currentY % 3) * 3;
         for (let y = 0; y < 3; y++) {
             for (let x = 0; x < 3; x++) {
                 if (!filled) continue;
-                if (this.board.tiles[sectorY + y][sectorX + x].used === false) filled = false;
+                if (this.board.tiles[sectorY + y][sectorX + x].used == false) filled = false;
             }
         }
         if (filled) return true;

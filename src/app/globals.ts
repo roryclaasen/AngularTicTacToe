@@ -43,6 +43,9 @@ export class Globals {
                 remove: 'board:remove',
                 removed: 'board:removed'
             },
+            user: {
+                disconnected: 'user:left'
+            },
             game: {
                 join: 'board:join'
             }

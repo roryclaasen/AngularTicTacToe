@@ -145,14 +145,21 @@ export class AppComponent {
 
     listenForChanges() {
         const game = this;
-        const oldTurn = this.board.turn;
         this.socket.on(this.globals.socketCommands.board.updated, function (data) {
-            console.log(data);
             if (data.token === game.gamePin) {
+                const oldTurn = game.board.turn;
                 game.syncBoardFromSever(data);
                 if (oldTurn !== game.board.turn) {
                     // TODO Play sound
                 }
+            }
+        });
+        this.socket.on(this.globals.socketCommands.user.disconnected, function (data) {
+            console.log(data);
+            if (data.token.toString() === game.gamePin.toString()) {
+                console.log('Player %s has left the game, reason: %s', data.name, data.reason);
+                alert(data.name + ' has left the game');
+                location.reload();
             }
         });
     }
@@ -186,8 +193,8 @@ export class AppComponent {
         }
 
         let filled = true;
-        const sectorX = Math.floor(col / 3) * 3;
-        const sectorY = Math.floor(row / 3) * 3;
+        const sectorX = Math.floor(this.board.currentX % 3) * 3;
+        const sectorY = Math.floor(this.board.currentY % 3) * 3;
         for (let y = 0; y < this.globals.GRID_SIZE; y++) {
             for (let x = 0; x < this.globals.GRID_SIZE; x++) {
                 if (!filled) {
