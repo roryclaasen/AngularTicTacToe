@@ -72,7 +72,8 @@ var gameBoards = (function () {
         join: join,
         remove: remove,
         get: get,
-        set: set
+        set: set,
+        length: Object.keys(boards).length
     };
 }());
 
@@ -177,9 +178,13 @@ module.exports = function (socket) {
                 name: username,
                 token: token
             });
-            console.log('User left (%s, %s), removing board %s', username, socket.id, token);
-
-            gameBoards.remove(token);
+            var removed = gameBoards.remove(token);
+            if (removed) {
+                console.log('User left (%s, %s), removed board %s', username, socket.id, token);
+                console.log('%d active boards left', gameBoards.length);
+            } else {
+                console.log('User left (%s, %s), board already removed', username, socket.id);
+            }
         }
     });
 
@@ -191,7 +196,7 @@ module.exports = function (socket) {
         }
 
         var filled = true;
-        const sectorX = Math.floor(board.currentXcol % 3) * 3;
+        const sectorX = Math.floor(board.currentX % 3) * 3;
         const sectorY = Math.floor(board.currentY % 3) * 3;
         for (let y = 0; y < 3; y++) {
             for (let x = 0; x < 3; x++) {

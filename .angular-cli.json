@@ -19,8 +19,7 @@
             "testTsconfig": "tsconfig.spec.json",
             "prefix": "app",
             "styles": [
-                "styles.scss",
-                "../node_modules/ng2-toastr/bundles/ng2-toastr.min.css"
+                "styles.scss"
             ],
             "scripts": [
                 "../node_modules/jquery/dist/jquery.slim.min.js",

@@ -1,10 +1,7 @@
-import { Component, ViewContainerRef } from '@angular/core';
-import { ToastsManager } from 'ng2-toastr/ng2-toastr';
+import { Component } from '@angular/core';
 import { BoardService } from './board.service';
 import { Board } from './board';
-
 import { Globals } from './globals';
-
 import { GUID } from './guid';
 
 @Component({
@@ -42,12 +39,17 @@ export class AppComponent {
 
     // Login
 
-    constructor(private boardService: BoardService, private toastr: ToastsManager, private _vcr: ViewContainerRef, globals: Globals) {
+
+    audio: any = new Audio();
+
+    constructor(private boardService: BoardService, globals: Globals) {
         this.globals = globals;
         globals.getSocket().then(data => this.socket = data);
-        this.toastr.setRootViewContainerRef(_vcr);
         this.boardService.createBoard();
         this.gameUrl = globals.gameUrl();
+
+        // this.audio.src = '/assets/click.wav';
+        // this.audio.load();
     }
 
     validate(): void {
@@ -151,6 +153,7 @@ export class AppComponent {
                 game.syncBoardFromSever(data);
                 if (oldTurn !== game.board.turn) {
                     // TODO Play sound
+                    // this.audio.play();
                 }
             }
         });
