@@ -13,7 +13,7 @@ import * as howler from 'howler';
 })
 
 export class AppComponent {
-    title = 'Tic-Tac-Toe';
+    title = 'Tic-Tac-Toe Pro';
     navbar = true;
 
     globals;
