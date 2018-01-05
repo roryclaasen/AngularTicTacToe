@@ -25,7 +25,7 @@
                     <h1>{{ showInputToken ? 'Hello ' + gameData.username + '!' : title }}</h1>
                 </div>
                 <app-input-name *ngIf="showInputUsername" [username]="gameData.username" (valueEntered)="usernameChaged($event)"></app-input-name>
-                <app-input-token *ngIf="showInputToken" [token]="gameData.token" (valueEntered)="tokenChaged($event)"></app-input-token>
+                <app-input-token *ngIf="showInputToken" [token]="gameData.token" (tokenEvent)="tokenChaged($event)"></app-input-token>
             </div>
         </div>
     </div>

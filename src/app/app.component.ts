@@ -30,15 +30,26 @@ export class AppComponent {
         this.gameData.stage = GameStage.token;
     }
 
-    tokenChaged(token: string): void {
-        if (token === undefined) {
-            this.gameData.token = undefined;
-            this.gameData.stage = GameStage.username;
-        } else {
-            this.gameData.token = token;
-            console.log('Game Token has been set to \'%s\'', token);
+    tokenChaged(data: any): void {
+        switch (data.task) {
+            case ('back'): {
+                this.gameData.token = undefined;
+                this.gameData.stage = GameStage.username;
+                break;
+            }
+            case ('join'): {
+                this.gameData.token = data.token;
+                console.log('Game Token has been set to \'%s\'', this.gameData.token);
 
-            this.gameData.stage = GameStage.token;
+                this.gameData.stage = GameStage.game;
+                // TODO Send server request to join
+                break;
+            }
+            case ('create'): {
+                // TODO Send server request to create
+                this.gameData.stage = GameStage.game;
+                break;
+            }
         }
     }
 

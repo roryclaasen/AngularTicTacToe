@@ -14,12 +14,13 @@ export class TokenComponent {
 
     stage: PromptStage = PromptStage.options;
 
-    @Output() valueEntered = new EventEmitter<String>();
+    @Output() tokenEvent = new EventEmitter<Object>();
 
     @Input() token: String;
 
     createGame(): void {
         // TODO Ask Server to create game
+        this.tokenEvent.emit({ task: 'create' });
     }
 
     changeStage(enumStage: number) {
@@ -36,12 +37,12 @@ export class TokenComponent {
         const length = input.toString().length;
         if (length === 6 && input !== undefined) {
             this.token = input;
-            this.valueEntered.emit(this.token);
+            this.tokenEvent.emit({ task: 'join', token: this.token });
         }
     }
 
     nameChange(): void {
-        this.valueEntered.emit(undefined);
+        this.tokenEvent.emit({ task: 'back' });
     }
 
     get showOptions() {
