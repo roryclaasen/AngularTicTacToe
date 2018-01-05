@@ -16,11 +16,11 @@ export class Board {
         Object.assign(this, values);
     }
 
-    userId(name: string): number {
+    userId(name: String): number {
         if (this.players > 0) {
             return this.names.indexOf(name);
         }
-        return null;
+        return undefined;
     }
 
     get players(): number {

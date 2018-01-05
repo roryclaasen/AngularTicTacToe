@@ -1,3 +1,7 @@
+<div *ngIf="gameFull" class="alert alert-danger" role="alert">
+    {{ token }}: This game is full
+</div>
+
 <div class="card mx-auto" style="max-width: 30rem;">
     <div class="card-header">{{ showOptions ? 'What do you want to do?' : inputPrompt }}</div>
     <div class="card-body">

@@ -1,4 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Globals, SocketCommands } from './../globals';
+
+import { GUID } from './../util/guid';
 
 @Component({
     selector: 'app-input-token',
@@ -14,19 +17,35 @@ export class TokenComponent {
 
     stage: PromptStage = PromptStage.options;
 
-    @Output() tokenEvent = new EventEmitter<Object>();
+    gameFull: Boolean = false;
 
+    @Output() tokenEvent: EventEmitter<Object> = new EventEmitter<Object>();
+
+    @Input() socket: any;
+    @Input() username: String;
     @Input() token: String;
 
+    constructor(private globals: Globals) {}
+
     createGame(): void {
-        // TODO Ask Server to create game
-        this.tokenEvent.emit({ task: 'create' });
+        const id = new GUID();
+        const tokenEvent: EventEmitter<Object> = this.tokenEvent;
+        this.socket.emit(SocketCommands.board.new, {
+            username: this.username,
+            guid: id.toString()
+        }, function(data) {
+            if (id.toString() === data.guid) {
+                console.log('Creating game');
+                tokenEvent.emit({ task: 'join', board: data.board });
+            }
+        });
     }
 
     changeStage(enumStage: number) {
+        this.inputToken = '';
+        this.gameFull = false;
         if (enumStage === 0) {
             this.stage = PromptStage.options;
-            this.inputToken = '';
         } else if (enumStage === 1) {
             this.stage = PromptStage.tokenInput;
         }
@@ -37,7 +56,20 @@ export class TokenComponent {
         const length = input.toString().length;
         if (length === 6 && input !== undefined) {
             this.token = input;
-            this.tokenEvent.emit({ task: 'join', token: this.token });
+
+            const tokenEvent: EventEmitter<Object> = this.tokenEvent;
+            this.socket.emit(SocketCommands.game.join, {
+                token: this.token,
+                name: this.username
+            }, function (serverData) {
+                if (serverData.error) {
+                    console.log('Could not join game: %s', serverData.error);
+                    this.gameFull = true;
+                } else {
+                    console.log('Joining game');
+                    tokenEvent.emit({ task: 'join', board: serverData });
+                }
+            });
         }
     }
 

@@ -12,7 +12,6 @@ interface Response {
 @Injectable()
 export class Globals {
     private http: HttpClient;
-    socketPort: number;
     socket: any = null;
 
     get NUM_PLAYERS(): number {
@@ -29,26 +28,6 @@ export class Globals {
 
     gameUrl(includePort: boolean = true) {
         return location.protocol + '//' + location.hostname + ((location.port && includePort) ? ':' + location.port : '');
-    }
-
-    get socketCommands() {
-        // TODO: Always Copy from socket.js
-        return {
-            board: {
-                new: 'board:new',
-                place: 'board:place',
-                update: 'board:update',
-                updated: 'board:updated',
-                remove: 'board:remove',
-                removed: 'board:removed'
-            },
-            user: {
-                disconnected: 'user:left'
-            },
-            game: {
-                join: 'board:join'
-            }
-        };
     }
 
     constructor(http: HttpClient) {
@@ -68,3 +47,21 @@ export class Globals {
     }
 }
 
+export class SocketCommands {
+    public static game = {
+        join: 'board:join'
+    };
+
+    public static board = {
+        new: 'board:new',
+        place: 'board:place',
+        update: 'board:update',
+        updated: 'board:updated',
+        remove: 'board:remove',
+        removed: 'board:removed'
+    };
+
+    public static user = {
+        disconnected: 'user:left'
+    };
+}

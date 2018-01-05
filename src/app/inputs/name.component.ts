@@ -12,7 +12,7 @@ export class NameComponent {
     inputLabel: String = 'Username';
     input: String = '';
 
-    @Output() valueEntered = new EventEmitter<String>();
+    @Output() valueEntered: EventEmitter<String> = new EventEmitter<String>();
 
     @Input() username: String;
 

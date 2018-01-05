@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Globals } from './globals';
+import { GameData, GameStage } from './util/gamedata';
 
 @Component({
     selector: 'app-root',
@@ -17,66 +18,62 @@ export class AppComponent {
 
     gameData: GameData;
 
+    private stage: GameStage;
+
     constructor(private globals: Globals) {
         globals.getSocket().then(data => this.socket = data);
         this.gameData = new GameData();
-        this.gameData.username = '';
+        this.stage = GameStage.username;
     }
 
     usernameChaged(username: string): void {
         this.gameData.username = username;
         console.log('Username has been changed to \'%s\'', username);
 
-        this.gameData.stage = GameStage.token;
+        this.stage = GameStage.token;
     }
 
     tokenChaged(data: any): void {
         switch (data.task) {
             case ('back'): {
                 this.gameData.token = undefined;
-                this.gameData.stage = GameStage.username;
+                this.stage = GameStage.username;
                 break;
             }
             case ('join'): {
-                this.gameData.token = data.token;
+                this.gameData.token = data.board.token;
                 console.log('Game Token has been set to \'%s\'', this.gameData.token);
-
-                this.gameData.stage = GameStage.game;
-                // TODO Send server request to join
+                this.gameData.board.update(data.board);
+                this.stage = GameStage.game;
                 break;
             }
-            case ('create'): {
-                // TODO Send server request to create
-                this.gameData.stage = GameStage.game;
+        }
+    }
+
+    gameEvent(data: any): void {
+        switch (data.task) {
+            case ('exit'): {
+                this.gameData.token = undefined;
+                this.stage = GameStage.token;
                 break;
             }
         }
     }
 
     get showInputUsername(): Boolean {
-        return this.gameData.stage === GameStage.username;
+        return this.stage === GameStage.username;
     }
 
     get showInputToken(): Boolean {
-        return this.gameData.stage === GameStage.token;
+        return this.stage === GameStage.token;
     }
 
     get showInputs(): Boolean {
         return this.showInputUsername || this.showInputToken;
     }
+
+    get showGame(): Boolean {
+        return this.stage === GameStage.game;
+    }
 }
 
-class GameData {
-    username: String;
-    token: String;
-
-    stage: GameStage = GameStage.username;
-
-    constructor() {}
-}
-
-enum GameStage {
-    username,
-    token,
-    game
-}

@@ -7,15 +7,17 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { NameComponent } from './inputs/name.component';
 import { TokenComponent } from './inputs/token.component';
+import { GameComponent } from './game/game.component';
 
 import { Globals } from './globals';
-import { GUID } from './guid';
+import { GUID } from './util/guid';
 
 @NgModule({
     declarations: [
         AppComponent,
         NameComponent,
-        TokenComponent
+        TokenComponent,
+        GameComponent
     ],
     imports: [
         BrowserModule,

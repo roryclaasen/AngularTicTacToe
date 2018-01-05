@@ -1,0 +1,53 @@
+<div *ngIf="isInLobby">
+    <div *ngIf="board.players < 2" class="card mx-auto" style="max-width: 30rem;">
+        <div class="card-header">Waiting for 2nd user to join...</div>
+        <div class="card-body">
+            <div class="card-text">
+                <h3>{{ gameData.username }}</h3>
+                Tell your friend to use
+                <h4 class="font-weight-bold">{{ gameData.token }}</h4> as the game token
+            </div>
+            <button class="btn btn-warning mt-3 float-left" (click)='backToServers()'>Back</button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="isInGame">
+    <div class="row turnMessage">
+        <h3 class="msg">{{ currentTurnMessage }}</h3>
+    </div>
+
+    <div class="row tables">
+        <div class="col-sm-7">
+            <table class="grid is-bordered float-right" [ngClass]="cssCurrentPlayerColor">
+                <tbody [ngClass]="currentTurn ? '' : 'notCurrentTurn'">
+                    <tr *ngFor="let row of board.tiles; let y = index">
+                        <td *ngFor="let col of row; let x = index" (click)="place($event)" id="t{{y}}{{x}}" [ngClass]="validSector(y, x) ? '' : 'disabled'">
+                            <div class="color" [ngClass]="col.class"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-sm-5">
+            <div class="d-table h-100 results">
+                <div class="d-table-cell align-middle h-100">
+                    <table class="grid is-bordered results float-left">
+                        <tbody>
+                            <tr *ngFor="let row of board.results; let y = index">
+                                <td *ngFor="let col of row; let x = index" id="t{{y}}{{x}}">
+                                    <div class="color" [ngClass]="col.class"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row helpMessage">
+        <h4 class="msg">{{ currentHelpMessage }}</h4>
+    </div>
+</div>
