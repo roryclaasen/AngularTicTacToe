@@ -3,6 +3,8 @@ import { Board } from './board';
 import { Globals } from './globals';
 import { GUID } from './guid';
 
+import * as howler from 'Howler';
+
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -15,7 +17,7 @@ export class AppComponent {
     navbar = true;
 
     globals;
-    audio: any = new Audio();
+    clickSound: any;
 
     // Login Vars
 
@@ -44,8 +46,9 @@ export class AppComponent {
         this.gameUrl = globals.gameUrl();
         this.board = new Board();
 
-        // this.audio.src = '/assets/click.wav';
-        // this.audio.load();
+        this.clickSound = new howler.Howl({
+            src: ['/assets/click.wav']
+        });
     }
 
     validate(): void {
@@ -126,7 +129,11 @@ export class AppComponent {
 
     syncBoardFromSever(serverBoard) {
         if (serverBoard) {
+            const oldTurn = this.board.turn;
             this.board.update(serverBoard);
+            if (oldTurn !== undefined && oldTurn !== this.board.turn) {
+                this.clickSound.play();
+            }
             if (this.board.winner) {
                 this.board.currentX = this.board.currentY = undefined;
                 console.log('%s has won the game', this.board.names[this.board.winner]);
@@ -138,12 +145,7 @@ export class AppComponent {
         const game = this;
         this.socket.on(this.globals.socketCommands.board.updated, function (data) {
             if (data.token === game.gamePin) {
-                const oldTurn = game.board.turn;
                 game.syncBoardFromSever(data);
-                if (oldTurn !== game.board.turn) {
-                    // TODO Play sound
-                    // this.audio.play();
-                }
             }
         });
         this.socket.on(this.globals.socketCommands.user.disconnected, function (data) {
