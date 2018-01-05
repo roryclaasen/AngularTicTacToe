@@ -3,7 +3,7 @@ import { Board } from './board';
 import { Globals } from './globals';
 import { GUID } from './guid';
 
-import * as howler from 'Howler';
+import * as howler from 'howler';
 
 @Component({
     selector: 'app-root',
