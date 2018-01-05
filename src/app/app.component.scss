@@ -1,17 +1,19 @@
 nav.navbar {
     z-index: 100;
+    .navbar-collapse {
+        border-bottom: 1px solid white;
+    }
 }
 
 $cellSize: 50px;
 $cellSmall: 40px;
 
-.turnMessage {
+.turnMessage, .helpMessage {
     color: white;
-    .msg {
-        margin: auto;
-        padding-bottom: 15px;
-    }
+    .msg { margin: auto; }
 }
+.turnMessage .msg { padding-bottom: 15px; }
+.helpMessage .msg { padding-top: 15px; }
 
 .results {
     margin: auto;
@@ -59,14 +61,18 @@ table.grid {
 
         width: $cellSize;
         height: $cellSize;
+
+        line-height: $cellSize;
         
         @media (max-width: 767.99px) {
             width: $cellSmall;
             height: $cellSmall;
+            line-height: $cellSmall;
         }
 
+        font-weight: bold;
+        color: white;
         padding: 0;
-
         background: white;           
 
         &.disabled { background-color: darken(white, 60%); cursor: default; pointer-events: none;}
@@ -75,8 +81,18 @@ table.grid {
             pointer-events: none;
             height: 100%;
             cursor: default;
-            &.cross { background-color: red; }
-            &.nought { background-color: blue; }
+            &.cross {
+                background-color: red;
+                &:before {
+                    content: 'X'
+                }
+            }
+            &.nought {
+                background-color: blue;
+                &:before {
+                    content: 'O'
+                }
+            }
         }
     }
 }

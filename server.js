@@ -4,7 +4,7 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var bodyParser = require('body-parser');
-var routes = require('./routes/index');
+var routes = require('./server/routes/index');
 var app = express();
 
 var http = require('http');
@@ -12,11 +12,11 @@ var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
 const port = process.env.PORT || 3000;
-console.log("Starting sevrer listening on http(s)://localhost:%d", port);
+console.log("Starting sevrer listening on http://localhost:%d", port);
 server.listen(port);
 io.set("origins", "*:*");
 
-io.on('connection', require('./routes/socket.js'));
+io.on('connection', require('./server/routes/socket.js'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

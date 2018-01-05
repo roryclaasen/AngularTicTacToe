@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { BoardService } from './board.service';
 import { Board } from './board';
 import { Globals } from './globals';
 import { GUID } from './guid';
@@ -8,7 +7,7 @@ import { GUID } from './guid';
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    providers: [BoardService]
+    providers: []
 })
 
 export class AppComponent {
@@ -16,6 +15,7 @@ export class AppComponent {
     navbar = true;
 
     globals;
+    audio: any = new Audio();
 
     // Login Vars
 
@@ -32,21 +32,17 @@ export class AppComponent {
     socket: any = null;
 
     // Game Vars
-
     playerId = 0;
 
     gameUrl: string;
+    board: Board;
 
     // Login
-
-
-    audio: any = new Audio();
-
-    constructor(private boardService: BoardService, globals: Globals) {
+    constructor(globals: Globals) {
         this.globals = globals;
         globals.getSocket().then(data => this.socket = data);
-        this.boardService.createBoard();
         this.gameUrl = globals.gameUrl();
+        this.board = new Board();
 
         // this.audio.src = '/assets/click.wav';
         // this.audio.load();
@@ -106,7 +102,6 @@ export class AppComponent {
         if (data.guid === id) {
             console.log('Created game %s', data.board.token);
             this.gamePin = data.board.token;
-            this.sendUpdateTilesNotification();
             this.join(data.board);
         }
     }
@@ -114,7 +109,7 @@ export class AppComponent {
     join(serverBoard): void {
         if (serverBoard) {
             if (this.gamePin === serverBoard.token) {
-                this.syncBoardFromSever(serverBoard, false);
+                this.syncBoardFromSever(serverBoard);
                 this.playerId = this.board.userId(this.username);
             }
         }
@@ -129,18 +124,12 @@ export class AppComponent {
         this.socket.emit(this.globals.socketCommands.board.update, this.gamePin);
     }
 
-    sendUpdateTilesNotification(): void {
-        this.socket.emit(this.globals.socketCommands.board.updateTiles, {
-            tiles: this.board.tiles,
-            token: this.gamePin
-        });
-    }
-
-    syncBoardFromSever(serverBoard, calculateResults: boolean = true) {
+    syncBoardFromSever(serverBoard) {
         if (serverBoard) {
             this.board.update(serverBoard);
-            if (calculateResults) {
-                this.boardService.calculateResults();
+            if (this.board.winner) {
+                this.board.currentX = this.board.currentY = undefined;
+                console.log('%s has won the game', this.board.names[this.board.winner]);
             }
         }
     }
@@ -158,7 +147,6 @@ export class AppComponent {
             }
         });
         this.socket.on(this.globals.socketCommands.user.disconnected, function (data) {
-            console.log(data);
             if (data.token.toString() === game.gamePin.toString()) {
                 console.log('Player %s has left the game, reason: %s', data.name, data.reason);
                 alert(data.name + ' has left the game');
@@ -169,7 +157,7 @@ export class AppComponent {
 
     place(e: any): AppComponent {
         const game = this;
-        if (this.currentTurn) {
+        if (this.currentTurn && this.board.winner === undefined) {
             const id = e.target.id, row = id.substring(1, 2), col = id.substring(2, 3);
             if (this.validSector(row, col)) {
                 this.socket.emit(this.globals.socketCommands.board.place, {
@@ -185,14 +173,11 @@ export class AppComponent {
     }
 
     validSector(row, col) {
-        if (this.board.currentY === undefined && this.board.currentX === undefined) {
-            return true;
-        }
+        if (this.board.winner !== undefined) { return true; }
+        if (this.board.currentY === undefined && this.board.currentX === undefined) { return true; }
 
         if (Math.floor(row / 3) === this.board.currentY % 3) {
-            if (Math.floor(col / 3) === this.board.currentX % 3) {
-                return true;
-            }
+            if (Math.floor(col / 3) === this.board.currentX % 3) { return true; }
         }
 
         let filled = true;
@@ -200,33 +185,12 @@ export class AppComponent {
         const sectorY = Math.floor(this.board.currentY % 3) * 3;
         for (let y = 0; y < this.globals.GRID_SIZE; y++) {
             for (let x = 0; x < this.globals.GRID_SIZE; x++) {
-                if (!filled) {
-                    continue;
-                }
-                if (this.board.tiles[sectorY + y][sectorX + x].used === false) {
-                    filled = false;
-                }
+                if (!filled) { continue; }
+                if (this.board.tiles[sectorY + y][sectorX + x].used === false) { filled = false; }
             }
         }
-
-        if (filled) {
-            return true;
-        }
-
+        if (filled) { return true; }
         return false;
-    }
-
-    createBoard(): AppComponent {
-        this.boardService.createBoard(this.globals.BOARD_SIZE);
-        return this;
-    }
-
-    get board(): Board {
-        return this.boardService.getBoard();
-    }
-
-    get resultBoard(): Board {
-        return this.boardService.getResultBoard();
     }
 
     get currentTurn(): boolean {
@@ -234,14 +198,24 @@ export class AppComponent {
     }
 
     get currentTurnMessage(): String {
+        if (this.board.winner !== undefined) {
+            return this.board.names[this.board.winner] + ' has won!';
+        }
         if (this.currentTurn) {
             return 'It is your turn!';
         }
         return 'It is ' + this.board.names[this.playerId === 1 ? 0 : 1] + '\'s turn!';
     }
 
+    get currentHelpMessage(): String {
+        if (this.board.winner !== undefined) {
+            return 'Refresh this page to play again';
+        }
+        return 'You are ' + ((this.playerId === 0) ? 'crosses' : 'noughts');
+    }
+
     get cssCurrentPlayerColor(): String {
-        if (this.board.turn === 1) {
+        if (this.board.turn === 0) {
             return 'border-cross';
         }
         return 'border-nought';

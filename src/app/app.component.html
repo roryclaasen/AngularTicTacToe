@@ -75,7 +75,7 @@
                                 <div class="d-table-cell align-middle h-100">
                                     <table class="grid is-bordered results float-left">
                                         <tbody>
-                                            <tr *ngFor="let row of resultBoard.tiles; let y = index">
+                                            <tr *ngFor="let row of board.results; let y = index">
                                                 <td *ngFor="let col of row; let x = index" id="t{{y}}{{x}}">
                                                     <div class="color" [ngClass]="col.class"></div>
                                                 </td>
@@ -85,6 +85,10 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="row helpMessage">
+                        <h4 class="msg">{{ currentHelpMessage }}</h4>
                     </div>
                 </div>
             </div>
