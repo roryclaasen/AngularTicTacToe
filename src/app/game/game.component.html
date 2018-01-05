@@ -1,11 +1,21 @@
 <div *ngIf="isInLobby">
-    <div *ngIf="board.players < 2" class="card mx-auto" style="max-width: 30rem;">
+    <div *ngIf="isInLobbyWaiting && (board.players < 2)" class="card mx-auto" style="max-width: 30rem;">
         <div class="card-header">Waiting for 2nd user to join...</div>
         <div class="card-body">
             <div class="card-text">
                 <h3>{{ gameData.username }}</h3>
                 Tell your friend to use
                 <h4 class="font-weight-bold">{{ gameData.token }}</h4> as the game token
+            </div>
+            <button class="btn btn-warning mt-3 float-left" (click)='backToServers()'>Back</button>
+        </div>
+    </div>
+    <div *ngIf="isInLobbyLeft" class="card mx-auto" style="max-width: 30rem;">
+        <!-- <div class="card-header">End Of Game</div> -->
+        <div class="card-body">
+            <div class="card-text">
+                <h3>Abandoned Game</h3>
+                Your opponent has left the game
             </div>
             <button class="btn btn-warning mt-3 float-left" (click)='backToServers()'>Back</button>
         </div>

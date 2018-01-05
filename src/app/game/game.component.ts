@@ -13,7 +13,7 @@ import { Board } from './../board';
 
 export class GameComponent implements OnInit {
 
-    stage: GameStage = GameStage.lobby;
+    stage: GameStage = GameStage.lobbyWaiting;
 
     @Input() gameData: GameData;
     @Input() socket: any;
@@ -38,15 +38,16 @@ export class GameComponent implements OnInit {
 
     listenForChanges(): void {
         const game = this;
+        const token = this.gameData.token.toString();
         this.socket.on(SocketCommands.board.updated, function (data) {
-            if (data.token === game.gameData.token) {
+            if (data.token === token) {
                 game.syncBoardFromSever(data);
             }
         });
         this.socket.on(SocketCommands.user.disconnected, function (data) {
-            if (data.token.toString() === game.gameData.token.toString()) {
+            if (data.token.toString() === token) {
                 console.log('Player %s has left the game, reason: %s', data.name, data.reason);
-                // TODO Player left message
+                game.stage = GameStage.lobbyLeft;
             }
         });
     }
@@ -140,8 +141,16 @@ export class GameComponent implements OnInit {
         return this.gameData.board;
     }
 
+    get isInLobbyWaiting(): Boolean {
+        return this.stage === GameStage.lobbyWaiting;
+    }
+
+    get isInLobbyLeft(): Boolean {
+        return this.stage === GameStage.lobbyLeft;
+    }
+
     get isInLobby(): Boolean {
-        return this.stage === GameStage.lobby;
+        return this.isInLobbyWaiting || this.isInLobbyLeft;
     }
 
     get isInGame(): Boolean {
@@ -149,12 +158,14 @@ export class GameComponent implements OnInit {
     }
 
     get isInResults(): Boolean {
-        return this.stage === GameStage.lobby;
+        return this.stage === GameStage.results;
     }
 }
 
 enum GameStage {
-    lobby,
+    lobbyWaiting,
+    lobbyLeft,
     game,
-    results
+    results,
+    left
 }

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../environments/environment';
 
@@ -11,7 +10,6 @@ interface Response {
 
 @Injectable()
 export class Globals {
-    private http: HttpClient;
     socket: any = null;
 
     get NUM_PLAYERS(): number {
@@ -28,10 +26,6 @@ export class Globals {
 
     gameUrl(includePort: boolean = true) {
         return location.protocol + '//' + location.hostname + ((location.port && includePort) ? ':' + location.port : '');
-    }
-
-    constructor(http: HttpClient) {
-        this.http = http;
     }
 
     getSocket(): any {
