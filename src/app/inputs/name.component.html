@@ -1,0 +1,11 @@
+<div class="card mx-auto" style="max-width: 30rem;">
+    <div class="card-header">{{ inputPrompt }}</div>
+    <div class="card-body">
+        <div class="card-text">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="{{ inputLabel }}" [attr.aria-label]="inputLabel" maxlength="32" [(ngModel)]='input'>
+            </div>
+        </div>
+        <button class="btn btn-success mt-3 ml-2 float-right" (click)='continue()' [ngClass]="(input.length <= 3) ? 'disabled' : ''">Continue</button>
+    </div>
+</div>

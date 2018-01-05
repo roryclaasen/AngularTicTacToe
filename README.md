@@ -1,4 +1,4 @@
-# Tic Tac Toe Pro (MIT)
+# Ultimate TicTacToe (MIT)
 
 ###### Based off my old java project [Tic Tac Toe](https://github.com/roryclaasen/TicTacToe) built with angular 5
 

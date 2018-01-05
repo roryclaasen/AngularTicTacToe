@@ -5,12 +5,17 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
+import { NameComponent } from './inputs/name.component';
+import { TokenComponent } from './inputs/token.component';
+
 import { Globals } from './globals';
 import { GUID } from './guid';
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+        NameComponent,
+        TokenComponent
     ],
     imports: [
         BrowserModule,
