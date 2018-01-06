@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Globals } from './globals';
 import { GameData, GameStage } from './util/gamedata';
-import { Howler } from './/util/Howler';
+import { Howler } from './util/Howler';
 
 @Component({
     selector: 'app-root',
