@@ -67,7 +67,11 @@ export class GameComponent implements OnInit {
             }
             if (this.board.winner) {
                 this.board.currentX = this.board.currentY = undefined;
-                console.log('%s has won the game', this.board.names[this.board.winner]);
+                if (this.board.winner === -1) {
+                    console.log('Game was a draw');
+                } else {
+                    console.log('%s has won the game', this.board.names[this.board.winner]);
+                }
             }
         }
     }
@@ -115,6 +119,9 @@ export class GameComponent implements OnInit {
 
     get currentTurnMessage(): String {
         if (this.board.winner !== undefined) {
+            if (this.board.winner === -1) {
+                return 'The game was a draw';
+            }
             return this.board.names[this.board.winner] + ' has won!';
         }
         if (this.currentTurn) {
@@ -125,6 +132,7 @@ export class GameComponent implements OnInit {
 
     get currentHelpMessage(): String {
         if (this.board.winner !== undefined) {
+            // TODO Turn this into a button
             return 'Refresh this page to play again';
         }
         return 'You are ' + ((this.gameData.playerId === 0) ? 'crosses' : 'noughts');

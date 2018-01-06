@@ -90,6 +90,7 @@ var gameBoards = (function () {
         const sectorX = Math.floor(board.currentX % 3) * 3;
         const sectorY = Math.floor(board.currentY % 3) * 3;
         for (var y = 0; y < 3; y++) {
+            if (!filled) continue;
             for (var x = 0; x < 3; x++) {
                 if (!filled) continue;
                 if (board.tiles[sectorY + y][sectorX + x].used == false) filled = false;
@@ -160,6 +161,17 @@ var gameBoards = (function () {
         if (winner == undefined && tilesEqual(board.results[0][0], board.results[1][1], board.results[2][2])) winner = -1;
         if (winner == undefined && tilesEqual(board.results[0][2], board.results[1][1], board.results[2][0])) winner = -1;
         if (winner != undefined) board.winner = board.turn;
+        else {
+            var filled = true;
+            for (var y = 0; y < 3; y++) {
+                if (!filled) continue;
+                for (var x = 0; x < 3; x++) {
+                    if (!filled) continue;
+                    if (board.results[y][x].class.length = 0) filled = false;
+                }
+            }
+            if (filled) board.winner = -1;
+        }
         return board;
     }
 

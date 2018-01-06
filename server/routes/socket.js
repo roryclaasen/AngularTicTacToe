@@ -61,10 +61,10 @@ module.exports = function (socket) {
         });
     });
 
-    socket.on(commands.board.remove, function (data) {
-        if (boardMaster.remove(data.token)) {
+    socket.on(commands.board.remove, function (token) {
+        if (boardMaster.remove(token)) {
             socket.broadcast.emit(commands.board.removed, {
-                token: data.token 
+                token: token 
             });
         }
     });
