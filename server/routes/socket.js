@@ -54,7 +54,8 @@ module.exports = function (socket) {
     socket.on(commands.board.place, function (data, callback) {
         boardMaster.place(data.token, data.placeY, data.placeX, function(board) {
             if (board.winner) {
-                console.log('%s has won game %s', board.names[board.winner], board.token);
+                if (board.winner == -1) console.log('Game %s was a draw', board.token);
+                else console.log('%s has won game %s', board.names[board.winner], board.token);
             }
             socket.broadcast.emit(commands.board.updated, board);
             callback(board);   
@@ -63,6 +64,11 @@ module.exports = function (socket) {
 
     socket.on(commands.board.remove, function (token) {
         if (boardMaster.remove(token)) {
+            socket.broadcast.emit(commands.user.disconnected, {
+                reason: 'Player quit',
+                name: username,
+                token: token
+            });
             socket.broadcast.emit(commands.board.removed, {
                 token: token 
             });

@@ -4,23 +4,19 @@ import { environment } from '../environments/environment';
 
 import * as io from 'socket.io-client';
 
-interface Response {
-    results: string[];
-}
-
 @Injectable()
 export class Globals {
-    socket: any = null;
+    private socket: any = null;
 
-    get NUM_PLAYERS(): number {
+    public static get NUM_PLAYERS(): number {
         return 2;
     }
 
-    get BOARD_SIZE(): number {
+    public static get BOARD_SIZE(): number {
         return 9;
     }
 
-    get GRID_SIZE(): number {
+    public static get GRID_SIZE(): number {
         return 3;
     }
 

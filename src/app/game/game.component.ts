@@ -38,14 +38,14 @@ export class GameComponent implements OnInit {
 
     listenForChanges(): void {
         const game = this;
-        const token = this.gameData.token.toString();
+        const token = this.gameData.token;
         this.socket.on(SocketCommands.board.updated, function (data) {
             if (data.token === token) {
                 game.syncBoardFromSever(data);
             }
         });
         this.socket.on(SocketCommands.user.disconnected, function (data) {
-            if (data.token.toString() === token) {
+            if (data.token.toString() === token.toString()) {
                 console.log('Player %s has left the game, reason: %s', data.name, data.reason);
                 game.stage = GameStage.lobbyLeft;
             }
@@ -103,8 +103,8 @@ export class GameComponent implements OnInit {
         let filled = true;
         const sectorX = Math.floor(this.board.currentX % 3) * 3;
         const sectorY = Math.floor(this.board.currentY % 3) * 3;
-        for (let y = 0; y < this.globals.GRID_SIZE; y++) {
-            for (let x = 0; x < this.globals.GRID_SIZE; x++) {
+        for (let y = 0; y < Globals.GRID_SIZE; y++) {
+            for (let x = 0; x < Globals.GRID_SIZE; x++) {
                 if (!filled) { continue; }
                 if (this.board.tiles[sectorY + y][sectorX + x].used === false) { filled = false; }
             }

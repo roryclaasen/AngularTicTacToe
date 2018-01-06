@@ -58,13 +58,14 @@ export class TokenComponent {
             this.token = input;
 
             const tokenEvent: EventEmitter<Object> = this.tokenEvent;
+            const tokenComp = this;
             this.socket.emit(SocketCommands.game.join, {
                 token: this.token,
                 name: this.username
             }, function (serverData) {
                 if (serverData.error) {
                     console.log('Could not join game: %s', serverData.error);
-                    this.gameFull = true;
+                    tokenComp.gameFull = true;
                 } else {
                     console.log('Joining game');
                     tokenEvent.emit({ task: 'join', board: serverData });

@@ -167,7 +167,7 @@ var gameBoards = (function () {
                 if (!filled) continue;
                 for (var x = 0; x < 3; x++) {
                     if (!filled) continue;
-                    if (board.results[y][x].class.length = 0) filled = false;
+                    if (board.results[y][x].class.length == 0) filled = false;
                 }
             }
             if (filled) board.winner = -1;

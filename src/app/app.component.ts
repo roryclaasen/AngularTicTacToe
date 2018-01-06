@@ -11,7 +11,7 @@ import { GameData, GameStage } from './util/gamedata';
 
 export class AppComponent {
     title: String = 'Ultimate Tic Tac Toe';
-    navbar: Boolean = true;
+    navbar: Boolean = false;
     socket: any;
 
     inputTitle: String = this.title;
