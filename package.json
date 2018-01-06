@@ -1,6 +1,6 @@
 {
   "name": "angulartictactoe",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "author": "@roryclaasen (http://roryclaasen.me)",
   "license": "MIT",
   "main": "server.js",
