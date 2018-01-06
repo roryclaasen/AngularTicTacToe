@@ -3,6 +3,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Globals, SocketCommands } from './../globals';
 import { GameData } from './../util/gamedata';
 import { Board } from './../board';
+import { Howler } from './../util/Howler';
 
 import * as FileSaver from 'file-saver';
 
@@ -76,7 +77,7 @@ export class GameComponent implements OnInit {
             const oldTurn = this.board.turn;
             this.board.update(serverBoard);
             if (oldTurn !== undefined && oldTurn !== this.board.turn) {
-               //  this.clickSound.play();
+                Howler.playClick(this.board.sectorSize());
             }
             if (this.board.winner) {
                 this.board.currentX = this.board.currentY = undefined;

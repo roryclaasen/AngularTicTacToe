@@ -24,6 +24,18 @@ export class Board {
         return undefined;
     }
 
+    sectorSize(sectorX: number = Math.floor(this.currentX / 3), sectorY: number = Math.floor(this.currentY / 3)): number {
+        let count = 0;
+        for (let y = sectorY * 3; y < (sectorY + 1) * 3; y++) {
+            for (let x = sectorX * 3; x < (sectorX + 1) * 3; x++) {
+                if (this.tiles[y][x].used) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
     get players(): number {
         if (this.names) {
             return this.names.length;

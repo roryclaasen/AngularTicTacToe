@@ -38,7 +38,7 @@ export class TokenComponent {
         }, function(data) {
             if (id.toString() === data.guid) {
                 console.log('Creating game');
-                tokenEvent.emit({ task: 'join', board: data.board });
+                tokenEvent.emit({ task: 'join', id: 0, board: data.board });
             }
         });
     }
@@ -71,11 +71,11 @@ export class TokenComponent {
                     tokenComp.joinError = serverData.error;
                     if (serverData.board) {
                         tokenComp.gameFull = true;
-                        tokenEvent.emit({ task: 'join', board: serverData });
+                        tokenEvent.emit({ task: 'join', id: -1, board: serverData });
                     }
                 } else {
                     console.log('Joining game');
-                    tokenEvent.emit({ task: 'join', board: serverData });
+                    tokenEvent.emit({ task: 'join', id: 1, board: serverData });
                 }
             });
         }

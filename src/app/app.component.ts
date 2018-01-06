@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Globals } from './globals';
 import { GameData, GameStage } from './util/gamedata';
+import { Howler } from './/util/Howler';
 
 @Component({
     selector: 'app-root',
@@ -24,6 +25,7 @@ export class AppComponent {
         globals.getSocket().then(data => this.socket = data);
         this.gameData = new GameData();
         this.stage = GameStage.username;
+        Howler.load();
     }
 
     usernameChaged(username: string): void {
@@ -44,6 +46,7 @@ export class AppComponent {
                 if (data.board.error) {
                     this.gameData.spectating = true;
                 }
+                this.gameData.playerId = data.id;
                 this.gameData.token = data.board.token;
                 console.log('Game Token has been set to \'%s\'', this.gameData.token);
                 this.gameData.board.update(data.board);

@@ -4,15 +4,12 @@ export class GameData {
     username: String;
     token: String;
     spectating: Boolean = false;
+    playerId: Number;
 
     board: Board;
 
     constructor() {
         this.board = new Board();
-    }
-
-    get playerId(): Number {
-        return this.board.userId(this.username);
     }
 }
 
