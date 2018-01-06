@@ -69,7 +69,7 @@ export class TokenComponent {
                 if (serverData.error) {
                     console.log('Could not join playable game: %s', serverData.error);
                     tokenComp.joinError = serverData.error;
-                    if (serverData.board) {
+                    if (serverData.names) {
                         tokenComp.gameFull = true;
                         tokenEvent.emit({ task: 'join', id: -1, board: serverData });
                     }
