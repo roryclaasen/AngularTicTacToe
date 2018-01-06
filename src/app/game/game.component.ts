@@ -41,7 +41,8 @@ export class GameComponent implements OnInit {
     downloadMoves(): void {
         let blob = new Blob([JSON.stringify({
             moves: this.board.moves,
-            playerNames: this.board.names
+            playerNames: this.board.names,
+            winner: this.board.winner
         })], {
             type: 'application/json'
         });
@@ -136,6 +137,9 @@ export class GameComponent implements OnInit {
             }
             return this.board.names[this.board.winner] + ' has won!';
         }
+        if (this.gameData.spectating) {
+            return 'It is ' + this.board.names[this.board.turn] + '\'s turn!';
+        }
         if (this.currentTurn) {
             return 'It is your turn!';
         }
@@ -143,6 +147,9 @@ export class GameComponent implements OnInit {
     }
 
     get currentHelpMessage(): String {
+        if (this.gameData.spectating) {
+            return 'You Are Spectating';
+        }
         if (this.board.winner !== undefined) {
             // TODO Turn this into a button
             return 'Refresh this page to play again';

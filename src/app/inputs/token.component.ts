@@ -19,6 +19,8 @@ export class TokenComponent {
 
     gameFull: Boolean = false;
 
+    joinError: String;
+
     @Output() tokenEvent: EventEmitter<Object> = new EventEmitter<Object>();
 
     @Input() socket: any;
@@ -44,6 +46,7 @@ export class TokenComponent {
     changeStage(enumStage: number): void {
         this.inputToken = '';
         this.gameFull = false;
+        this.joinError = '';
         if (enumStage === 0) {
             this.stage = PromptStage.options;
         } else if (enumStage === 1) {
@@ -64,8 +67,12 @@ export class TokenComponent {
                 name: this.username
             }, function (serverData) {
                 if (serverData.error) {
-                    console.log('Could not join game: %s', serverData.error);
-                    tokenComp.gameFull = true;
+                    console.log('Could not join playable game: %s', serverData.error);
+                    tokenComp.joinError = serverData.error;
+                    if (serverData.board) {
+                        tokenComp.gameFull = true;
+                        tokenEvent.emit({ task: 'join', board: serverData });
+                    }
                 } else {
                     console.log('Joining game');
                     tokenEvent.emit({ task: 'join', board: serverData });

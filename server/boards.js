@@ -28,9 +28,10 @@ var gameBoards = (function () {
             token: token
         };
 
-        if (board.names.length == 2) return {
-            error: 'This game is currently full'
-        };
+        if (board.names.length == 2) {
+            board.error = 'This game is currently full';
+            return board;
+        }
 
         board.names.push(name);
         boards[token.toString()] = board;

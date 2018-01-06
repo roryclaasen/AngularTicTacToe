@@ -41,6 +41,9 @@ export class AppComponent {
                 break;
             }
             case ('join'): {
+                if (data.board.error) {
+                    this.gameData.spectating = true;
+                }
                 this.gameData.token = data.board.token;
                 console.log('Game Token has been set to \'%s\'', this.gameData.token);
                 this.gameData.board.update(data.board);
@@ -54,6 +57,7 @@ export class AppComponent {
         switch (data.task) {
             case ('exit'): {
                 this.gameData.token = undefined;
+                this.gameData.spectating = false;
                 this.stage = GameStage.token;
                 break;
             }

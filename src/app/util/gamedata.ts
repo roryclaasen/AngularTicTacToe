@@ -3,6 +3,7 @@ import { Board } from './../board';
 export class GameData {
     username: String;
     token: String;
+    spectating: Boolean = false;
 
     board: Board;
 

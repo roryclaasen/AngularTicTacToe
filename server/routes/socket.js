@@ -20,12 +20,14 @@ module.exports = function (socket) {
 
     var username = undefined;
     var token = undefined;
+    var spectating = false;
 
     socket.on(commands.board.new, function (data, callback) {
         var newBoard = boardMaster.create(data.username);
         console.log('%s (%s) created New Board: %d', newBoard.names[0], data.guid, newBoard.token);
         username = data.username;
         token = newBoard.token;
+        spectating = false;
         callback({
             board: newBoard,
             guid: data.guid
@@ -37,10 +39,12 @@ module.exports = function (socket) {
         username = data.name;
         token = data.token;
         if (board.error) {
-            console.log('%s failed to join %s, reason: %s', data.name, data.token, board.error);
+            console.log('%s is spectating game %s, reason: %s', data.name, data.token, board.error);
+            spectating = true;
             callback(board);
         } else {
             console.log('%s has joined game %s', board.names[1], board.token);
+            spectating = false;
             callback(board);
         }
     });
@@ -76,7 +80,7 @@ module.exports = function (socket) {
     });
 
     socket.on('disconnect', function (reason) {
-        if (token) {
+        if (token && !spectating) {
             socket.broadcast.emit(commands.user.disconnected, {
                 reason: reason,
                 name: username,
