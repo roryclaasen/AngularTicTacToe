@@ -18,6 +18,7 @@
                 Your opponent has left the game
             </div>
             <button class="btn btn-warning mt-3 float-left" (click)='backToServers()'>Back</button>
+            <button class="btn btn-info mt-3 float-right" (click)='downloadMoves()'>Download Moves</button>
         </div>
     </div>
 </div>
@@ -34,7 +35,7 @@
                     <h3>{{ currentTurnMessage }}</h3>
                 </div>
                 <div class="col-4">
-                    <span class="float-right">{{ gameData.token }}</span>
+                    <button class="btn btn-info mt-3 float-right" (click)='downloadMoves()'>Download Moves</button>
                 </div>
             </div>
         </div>

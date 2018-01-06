@@ -4,6 +4,8 @@ import { Globals, SocketCommands } from './../globals';
 import { GameData } from './../util/gamedata';
 import { Board } from './../board';
 
+import * as FileSaver from 'file-saver';
+
 @Component({
     selector: 'app-game',
     templateUrl: './game.component.html',
@@ -34,6 +36,16 @@ export class GameComponent implements OnInit {
     backToServers(): void {
         this.socket.emit(SocketCommands.board.remove, this.gameData.token);
         this.gameEvent.emit({ task: 'exit' });
+    }
+
+    downloadMoves(): void {
+        let blob = new Blob([JSON.stringify({
+            moves: this.board.moves,
+            playerNames: this.board.names
+        })], {
+            type: 'application/json'
+        });
+        FileSaver.saveAs(blob, 'moves-' + this.gameData.token + '.json');
     }
 
     listenForChanges(): void {

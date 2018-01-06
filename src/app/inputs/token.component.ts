@@ -41,7 +41,7 @@ export class TokenComponent {
         });
     }
 
-    changeStage(enumStage: number) {
+    changeStage(enumStage: number): void {
         this.inputToken = '';
         this.gameFull = false;
         if (enumStage === 0) {

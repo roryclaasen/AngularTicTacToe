@@ -70,6 +70,14 @@ var gameBoards = (function () {
 
                 board.tiles[row][col].used = true;
                 board.tiles[row][col].class = (board.turn == 0) ? 'cross' : 'nought';
+                board.moves.push({
+                    turn: board.moves.length + 1,
+                    x: col, 
+                    y: row, 
+                    largeGrid: [Math.floor(row / 3), Math.floor(col / 3)],
+                    smallGrid: [row % 3, col % 3],
+                    player: board.turn
+                });
 
                 board = calculate(board);
                 if (board.winner == undefined) board.turn = (board.turn == 0) ? 1 : 0;
@@ -203,6 +211,7 @@ var Board = function (token, name) {
     this.results = [];
     this.currentX = undefined, currentY = undefined;
     this.winner = undefined;
+    this.moves = [];
 
     for (var y = 0; y < 9; y++) {
         this.tiles[y] = [];

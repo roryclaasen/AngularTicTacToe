@@ -1,9 +1,8 @@
-<div style="max-width: 30rem;">
-    <div *ngIf="gameFull" class="alert alert-danger" role="alert">
+    <div *ngIf="gameFull" class="alert alert-danger" role="alert" style="max-width: 30rem;">
         This game is full
     </div>
 
-    <div class="card mx-auto">
+    <div class="card mx-auto" style="max-width: 30rem;">
         <div class="card-header">{{ showOptions ? 'What do you want to do?' : inputPrompt }}</div>
         <div class="card-body">
             <div *ngIf="showOptions" class="input-group d-inline-block">
@@ -18,4 +17,3 @@
             <button *ngIf="showInput" class="btn btn-success mt-3 ml-2 float-right" (click)='continue()' [ngClass]="(inputToken.toString().length == 6) ? '' : 'disabled'">Join Game</button>
         </div>
     </div>
-</div>

@@ -7,6 +7,7 @@ export class Board {
     currentX: number;
     currentY: number;
     winner: number;
+    moves: Object[];
 
     constructor(values: Object = {}) {
         this.update(values);
