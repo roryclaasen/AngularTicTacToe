@@ -30,6 +30,7 @@ var gameBoards = (function () {
 
         if (board.names.length == 2) {
             board.error = 'This game is currently full';
+            board.spectating = true;
             return board;
         }
 
@@ -53,6 +54,7 @@ var gameBoards = (function () {
     };
 
     var remove = function (token) {
+        if (token !== undefined) return false;
         if (boards[token.toString()]) {
             delete boards[token.toString()];
             return true;

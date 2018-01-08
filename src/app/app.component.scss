@@ -4,3 +4,22 @@ nav.navbar {
     //     border-bottom: 1px solid white;
     // }
 }
+
+$footerHeight: 60px;
+
+.hasFooter {
+    margin-bottom: -$footerHeight;
+    padding-bottom: $footerHeight * 0.75;
+}
+
+footer {
+    height: $footerHeight;
+    padding: 10px 0px;
+    color: white;
+    .license a {
+        color: darken(white, 5%);
+        &:hover {
+            color:white;
+        }
+    }
+}

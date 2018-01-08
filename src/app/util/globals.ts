@@ -1,12 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Board } from './board';
 
-import { environment } from '../environments/environment';
+import { environment } from './../../environments/environment';
 
 import * as io from 'socket.io-client';
 
-@Injectable()
 export class Globals {
-    private socket: any = null;
+    private static socket: any = null;
 
     public static get NUM_PLAYERS(): number {
         return 2;
@@ -20,20 +19,34 @@ export class Globals {
         return 3;
     }
 
-    gameUrl(includePort: boolean = true) {
+    public static gameUrl(includePort: boolean = true) {
         return location.protocol + '//' + location.hostname + ((location.port && includePort) ? ':' + location.port : '');
     }
 
-    getSocket(): any {
+    public static getSocket(): any {
         const promise = new Promise((resolve, reject) => {
-            if (this.socket !== null) {
-                resolve(this.socket);
+            if (Globals.socket !== null) {
+                resolve(Globals.socket);
             } else {
-                this.socket = io(this.gameUrl());
-                resolve(this.socket);
+                Globals.socket = io(Globals.gameUrl());
+                resolve(Globals.socket);
             }
         });
         return promise;
+    }
+}
+
+export class GameData {
+    username: String;
+    token: String;
+    spectating: Boolean = false;
+    playerId: Number;
+
+    board: Board;
+
+    constructor() {
+        this.board = new Board();
+        this.username = '';
     }
 }
 
@@ -54,4 +67,23 @@ export class SocketCommands {
     public static user = {
         disconnected: 'user:left'
     };
+}
+
+export enum AppStage {
+    username,
+    token,
+    game
+}
+
+export enum TokenStage {
+    options,
+    tokenInput
+}
+
+export enum GameStage {
+    lobbyWaiting,
+    lobbyLeft,
+    game,
+    results,
+    left
 }

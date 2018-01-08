@@ -39,8 +39,10 @@ module.exports = function (socket) {
         username = data.name;
         token = data.token;
         if (board.error) {
-            console.log('%s is spectating game %s, reason: %s', data.name, data.token, board.error);
-            spectating = true;
+            if (board.spectating) {
+                console.log('%s is spectating game %s, reason: %s', data.name, data.token, board.error);
+                spectating = true;
+            } else console.log('%s failed to join game %s, reason: %s', data.name, data.token, board.error);
             callback(board);
         } else {
             console.log('%s has joined game %s', board.names[1], board.token);

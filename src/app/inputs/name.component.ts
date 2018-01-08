@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
     selector: 'app-input-name',
@@ -7,7 +7,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
     providers: []
 })
 
-export class NameComponent {
+export class NameComponent implements OnInit {
     inputPrompt: String = 'Enter your username';
     inputLabel: String = 'Username';
     input: String = '';
@@ -15,6 +15,12 @@ export class NameComponent {
     @Output() valueEntered: EventEmitter<String> = new EventEmitter<String>();
 
     @Input() username: String;
+
+    ngOnInit(): void {
+        if (this.username.length > 0) {
+            this.input = this.username;
+        }
+    }
 
     continue() {
         const input = this.input;

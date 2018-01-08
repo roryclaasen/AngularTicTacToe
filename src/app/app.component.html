@@ -17,19 +17,22 @@
         </ul>
     </div>
 </nav>
-<div class="layout">
-    <div class="center">
-        <div class="container">
-            <div class="inputs" *ngIf="showInputs">
-                <div class="mb-4 text-white text-center">
-                    <h1>{{ showInputToken ? 'Hello ' + gameData.username + '!' : title }}</h1>
-                </div>
-                <app-input-name *ngIf="showInputUsername" [username]="gameData.username" (valueEntered)="usernameChaged($event)"></app-input-name>
-                <app-input-token *ngIf="showInputToken" [socket]="socket" [username]="gameData.username" [token]="gameData.token" (tokenEvent)="tokenChaged($event)"></app-input-token>
+
+<div class="h-100 w-100 mx-auto row align-items-center" [ngClass]="showFooter ? 'hasFooter' : ''">
+    <div class="col text-center">
+        <div *ngIf="showInputs" class="inputs">
+            <div class="mb-4 text-white text-center">
+                <h1>{{ showInputToken ? 'Hello ' + gameData.username + '!' : title }}</h1>
             </div>
-            <div class="game" *ngIf="showGame">
-                <app-game [gameData]="gameData" [socket]="socket" (gameEvent)="gameEvent($event)"></app-game>
-            </div>
+            <app-input-name *ngIf="showInputUsername" [username]="gameData.username" (valueEntered)="usernameChaged($event)"></app-input-name>
+            <app-input-token *ngIf="showInputToken" [socket]="socket" [username]="gameData.username" [token]="gameData.token" (tokenEvent)="tokenChaged($event)"></app-input-token>
         </div>
+        <app-game *ngIf="showGame" [gameData]="gameData" [socket]="socket" (gameEvent)="gameEvent($event)"></app-game>
     </div>
 </div>
+
+<footer *ngIf="showFooter" class="col text-center">
+    <span class="license">
+        <a href="https://github.com/roryclaasen/AngularTicTacToe/blob/master/LICENSE">Rory Claasen (MIT) &copy; 2017-2018</a>
+    </span>
+</footer>

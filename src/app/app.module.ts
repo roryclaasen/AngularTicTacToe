@@ -9,7 +9,6 @@ import { NameComponent } from './inputs/name.component';
 import { TokenComponent } from './inputs/token.component';
 import { GameComponent } from './game/game.component';
 
-import { Globals } from './globals';
 import { GUID } from './util/guid';
 
 @NgModule({
@@ -25,7 +24,7 @@ import { GUID } from './util/guid';
         HttpModule,
         HttpClientModule
     ],
-    providers: [ Globals, GUID ],
+    providers: [ GUID ],
     bootstrap: [ AppComponent ]
 })
 export class AppModule { }

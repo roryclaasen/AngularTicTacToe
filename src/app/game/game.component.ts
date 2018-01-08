@@ -1,9 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-
-import { Globals, SocketCommands } from './../globals';
-import { GameData } from './../util/gamedata';
-import { Board } from './../board';
-import { Howler } from './../util/Howler';
+import { Globals, GameData, GameStage, SocketCommands } from './../util/globals';
+import { Board } from './../util/board';
+import { Howler } from './../util/audio';
 
 import * as FileSaver from 'file-saver';
 
@@ -24,8 +22,6 @@ export class GameComponent implements OnInit {
     @Output() gameEvent: EventEmitter<Object> = new EventEmitter<Object>();
 
     private playing: Boolean = false;
-
-    constructor(private globals: Globals) {}
 
     ngOnInit(): void {
         this.syncBoardFromSever(this.gameData.board);
@@ -190,10 +186,3 @@ export class GameComponent implements OnInit {
     }
 }
 
-enum GameStage {
-    lobbyWaiting,
-    lobbyLeft,
-    game,
-    results,
-    left
-}

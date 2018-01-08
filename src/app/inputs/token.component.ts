@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Globals, SocketCommands } from './../globals';
+import { Globals, SocketCommands, TokenStage } from './../util/globals';
 
 import { GUID } from './../util/guid';
 
@@ -15,7 +15,7 @@ export class TokenComponent {
     inputLabel: String = 'Token';
     inputToken: String = '';
 
-    stage: PromptStage = PromptStage.options;
+    stage: TokenStage = TokenStage.options;
 
     gameFull: Boolean = false;
 
@@ -26,8 +26,6 @@ export class TokenComponent {
     @Input() socket: any;
     @Input() username: String;
     @Input() token: String;
-
-    constructor(private globals: Globals) {}
 
     createGame(): void {
         const id = new GUID();
@@ -48,9 +46,10 @@ export class TokenComponent {
         this.gameFull = false;
         this.joinError = '';
         if (enumStage === 0) {
-            this.stage = PromptStage.options;
+            this.stage = TokenStage.options;
+            this.socket.emit(SocketCommands.board.remove, this.token);
         } else if (enumStage === 1) {
-            this.stage = PromptStage.tokenInput;
+            this.stage = TokenStage.tokenInput;
         }
     }
 
@@ -69,8 +68,8 @@ export class TokenComponent {
                 if (serverData.error) {
                     console.log('Could not join playable game: %s', serverData.error);
                     tokenComp.joinError = serverData.error;
-                    if (serverData.names) {
-                        tokenComp.gameFull = true;
+                    tokenComp.gameFull = true;
+                    if (serverData.spectating) {
                         tokenEvent.emit({ task: 'join', id: -1, board: serverData });
                     }
                 } else {
@@ -85,16 +84,11 @@ export class TokenComponent {
         this.tokenEvent.emit({ task: 'back' });
     }
 
-    get showOptions() {
-        return this.stage === PromptStage.options;
+    get showOptions(): Boolean {
+        return this.stage === TokenStage.options;
     }
 
-    get showInput() {
-        return this.stage === PromptStage.tokenInput;
+    get showInput(): Boolean {
+        return this.stage === TokenStage.tokenInput;
     }
-}
-
-enum PromptStage {
-    options,
-    tokenInput
 }
