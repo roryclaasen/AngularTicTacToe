@@ -17,6 +17,5 @@ The objective of this game is to be the first to win three tic-tac-toe games lyi
 1.  The first player may place an "X" in any cell within any mini-square on the board.  
 2.  The selected cell position within this mini-square corresponds to the mini-square position within the greater-square where the second player must then place an "O".
 3.  Thereafter, the two players take turns placing their mark in any unfilled cell within the mini-square dictated by the cell position marked by the previous player.  For the first player, this mini-square will be outlined in red.
-4.  (variation A) The first tic-tac-toe winner in a mini-square remains the winner in that mini-square for the remainder of the game.
-5. (variation A).  If a player is sent to a mini-square in which all the cells are filled, the player may next place his mark in any unfilled cell in any other mini-board.
-5. (variation B - current default).  If a player is sent to a mini-square that has already been won, or in which all the cells are already filled, then the player may next place his mark in any unfilled cell in any other mini-board.
+4.  The first tic-tac-toe winner in a mini-square remains the winner in that mini-square for the remainder of the game.
+5.  If a player is sent to a mini-square in which all the cells are filled, the player may next place his mark in any unfilled cell in any other mini-board.
