@@ -6,7 +6,7 @@ Play the game in your browser at [roryclaasen.me/TicTacToe](http://roryclaasen.m
 
 ## Rules
 
-Tic-tac-toe-ception is a 2-player computer game played on a game board comprising nine tic-tac-toe games set out in nine mini-squares within a 3x3 greater-square.  Thus, there are 81 cells, arranged in nine 3x3 mini-squares within a greater square.
+Ultimate TicTacToe is a 2-player computer game played on a game board comprising nine tic-tac-toe games set out in nine mini-squares within a 3x3 greater-square.  Thus, there are 81 cells, arranged in nine 3x3 mini-squares within a greater square.
 
 ### Objective:
 

@@ -31,6 +31,7 @@ export class GameComponent implements OnInit {
     }
 
     backToServers(): void {
+        console.log('Exiting Game');
         this.socket.emit(SocketCommands.board.remove, this.gameData.token);
         this.gameEvent.emit({ task: 'exit' });
     }
@@ -58,6 +59,7 @@ export class GameComponent implements OnInit {
             if (data.token.toString() === token.toString()) {
                 console.log('Player %s has left the game, reason: %s', data.name, data.reason);
                 game.stage = GameStage.lobbyLeft;
+                game.gameEvent.emit({ task: 'ended' });
             }
         });
     }
@@ -68,6 +70,7 @@ export class GameComponent implements OnInit {
                 if (serverBoard.names.length === 2) {
                     this.playing = true;
                     this.stage = GameStage.game;
+                    this.gameEvent.emit({ task: 'started' });
                 }
             }
             const oldTurn = this.board.turn;
@@ -149,7 +152,7 @@ export class GameComponent implements OnInit {
         }
         if (this.board.winner !== undefined) {
             // TODO Turn this into a button
-            return 'Refresh this page to play again';
+            return 'Create a new game to play again';
         }
         return 'You are ' + ((this.gameData.playerId === 0) ? 'crosses' : 'noughts');
     }

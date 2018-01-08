@@ -24,6 +24,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/', routes);
 
 app.use(function (req, res, next) {
+    console.log(req.url);
     var err = new Error('Not Found');
     err.status = 404;
     next(err);

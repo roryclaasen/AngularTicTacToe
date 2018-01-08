@@ -8,6 +8,14 @@ $cellSmall: 40px;
 .turnMessage .msg { padding-bottom: 15px; }
 .helpMessage .msg { padding-top: 15px; }
 
+.banner {
+    @media (max-width: 767.99px) {
+        .float-right, .float-left {
+            float: none !important;
+        }
+    }
+}
+
 .results {
     margin: auto;
     @media (max-width: 767.99px) {

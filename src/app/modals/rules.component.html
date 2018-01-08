@@ -1,0 +1,29 @@
+<div class="modal fade" id="{{ modalId }}" tabindex="-1" role="dialog" [attr.aria-labelledby]="rulesModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titleId">{{ title }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h3>Objective:</h3>
+                    <p>
+                The objective of this game is to be the first to win three tic-tac-toe games lying in a row, column, or diagonal within the greater-square.
+                </p>
+                <h3>Rules of Play:</h3>
+                <ol>
+                    <li>The first player may place an "X" in any cell within any mini-square on the board.</li>  
+                    <li>The selected cell position within this mini-square corresponds to the mini-square position within the greater-square where the second player must then place an "O".</li>
+                    <li>Thereafter, the two players take turns placing their mark in any unfilled cell within the mini-square dictated by the cell position marked by the previous player.  For the first player, this mini-square will be outlined in red.</li>
+                    <li>The first tic-tac-toe winner in a mini-square remains the winner in that mini-square for the remainder of the game.</li>
+                    <li>If a player is sent to a mini-square in which all the cells are filled, the player may next place his mark in any unfilled cell in any other mini-board.</li>
+                </ol>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Got it!</button>
+            </div>
+        </div>
+    </div>
+</div>

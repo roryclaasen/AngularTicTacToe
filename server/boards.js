@@ -54,11 +54,12 @@ var gameBoards = (function () {
     };
 
     var remove = function (token) {
-        if (token !== undefined) return false;
-        if (boards[token.toString()]) {
-            delete boards[token.toString()];
-            return true;
-        }
+        try {
+            if (boards[token.toString()]) {
+                delete boards[token.toString()];
+                return true;
+            }
+        } catch (error) { return false; }
         return false;
     };
 

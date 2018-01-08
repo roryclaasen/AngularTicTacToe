@@ -5,11 +5,20 @@ nav.navbar {
     // }
 }
 
+$navarHeight: 56px;
 $footerHeight: 60px;
 
-.hasFooter {
-    margin-bottom: -$footerHeight;
-    padding-bottom: $footerHeight * 0.75;
+.mainContent {
+    &.notInGame {
+        height: calc(100% - #{$navarHeight});
+    }
+    
+    position: relative;
+
+    &.hasFooter {
+        margin-bottom: -$footerHeight;
+        padding-bottom: $footerHeight * 0.75;
+    }
 }
 
 footer {

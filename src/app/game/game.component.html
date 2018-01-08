@@ -26,14 +26,14 @@
     <div class="card mx-auto mb-4" style="max-width: 45rem;">
         <div class="card-header">{{ currentHelpMessage }}</div>
         <div class="card-body">
-            <div class="row">
-                <div class="col-3">
+            <div class="row banner">
+                <div class="col-sm-3">
                     <button class="btn btn-warning float-left" (click)='backToServers()'>Exit</button>
                 </div>
-                <div class="col-6">
+                <div class="col-sm-6">
                     <h3>{{ currentTurnMessage }}</h3>
                 </div>
-                <div class="col-3">
+                <div class="col-sm-3">
                     <button class="btn btn-info float-right" (click)='downloadMoves()'>Download Moves</button>
                 </div>
             </div>

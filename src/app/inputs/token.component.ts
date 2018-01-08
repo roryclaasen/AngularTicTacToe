@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Globals, SocketCommands, TokenStage } from './../util/globals';
 
 import { GUID } from './../util/guid';
@@ -10,7 +10,7 @@ import { GUID } from './../util/guid';
     providers: []
 })
 
-export class TokenComponent {
+export class TokenComponent implements OnInit {
     inputPrompt: String = 'Enter the game token';
     inputLabel: String = 'Token';
     inputToken: String = '';
@@ -26,6 +26,10 @@ export class TokenComponent {
     @Input() socket: any;
     @Input() username: String;
     @Input() token: String;
+
+    ngOnInit(): void {
+        this.inputToken = '';
+    }
 
     createGame(): void {
         const id = new GUID();
@@ -81,6 +85,7 @@ export class TokenComponent {
     }
 
     nameChange(): void {
+        this.inputToken = '';
         this.tokenEvent.emit({ task: 'back' });
     }
 

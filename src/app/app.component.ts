@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Globals, GameData, AppStage} from './util/globals';
 import { Howler } from './util/audio';
 
@@ -11,14 +11,18 @@ import { Howler } from './util/audio';
 
 export class AppComponent implements OnInit {
     title: String = 'Ultimate Tic Tac Toe';
-    navbar: Boolean = false;
+    navbar: Boolean = true;
     socket: any;
 
     inputTitle: String = this.title;
 
     gameData: GameData;
 
+    gameStarted: Boolean = false;
+
     private stage: AppStage;
+
+    constructor(private cdr: ChangeDetectorRef) { }
 
     ngOnInit(): void {
         Globals.getSocket().then(data => this.socket = data);
@@ -57,10 +61,21 @@ export class AppComponent implements OnInit {
 
     gameEvent(data: any): void {
         switch (data.task) {
+            case('started'): {
+                this.gameStarted = true;
+                this.cdr.detectChanges();
+                break;
+            }
+            case ('ended'): {
+                this.gameStarted = false;
+                this.cdr.detectChanges();
+                break;
+            }
             case ('exit'): {
                 this.gameData.token = undefined;
                 this.gameData.spectating = false;
                 this.stage = AppStage.token;
+                this.gameStarted = false;
                 break;
             }
         }

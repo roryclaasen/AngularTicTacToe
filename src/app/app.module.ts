@@ -9,6 +9,8 @@ import { NameComponent } from './inputs/name.component';
 import { TokenComponent } from './inputs/token.component';
 import { GameComponent } from './game/game.component';
 
+import { RulesComponent } from './modals/rules.component';
+
 import { GUID } from './util/guid';
 
 @NgModule({
@@ -16,7 +18,8 @@ import { GUID } from './util/guid';
         AppComponent,
         NameComponent,
         TokenComponent,
-        GameComponent
+        GameComponent,
+        RulesComponent
     ],
     imports: [
         BrowserModule,
