@@ -20,6 +20,9 @@
         </ul>
         <ul class="navbar-nav w-100 justify-content-end">
             <li class="nav-item">
+                <a class="nav-link" href="#themeModal" data-toggle="modal" data-target="#themeModal">Change Theme</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="https://github.com/roryclaasen/AngularTicTacToe/">Source Code</a>
             </li>
         </ul>
@@ -28,6 +31,7 @@
 
 <app-module-rules></app-module-rules>
 <app-module-about></app-module-about>
+<app-module-theme [gameTheme]="gameData.theme" (themeEvent)="themeEvent($event)"></app-module-theme>
 
 <div class="w-100 mx-auto row align-items-center mainContent" [ngClass]="{'notInGame': !gameStarted, 'hasFooter': showFooter}">
     <div class="col text-center">

@@ -44,6 +44,10 @@ export class GameData {
 
     board: Board;
 
+    theme: any = {
+        showLetter: true
+    };
+
     constructor() {
         this.board = new Board();
         this.username = '';

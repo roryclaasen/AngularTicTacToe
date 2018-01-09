@@ -81,6 +81,14 @@ export class AppComponent implements OnInit {
         }
     }
 
+    themeEvent(data: any): void {
+        switch (data.task) {
+            case ('update'): {
+                this.gameData.theme = data.theme;
+            }
+        }
+    }
+
     get showInputUsername(): Boolean {
         return this.stage === AppStage.username;
     }

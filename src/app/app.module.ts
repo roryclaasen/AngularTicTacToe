@@ -11,6 +11,7 @@ import { GameComponent } from './game/game.component';
 
 import { RulesComponent } from './modals/rules.component';
 import { AboutComponent } from './modals/about.component';
+import { ThemeComponent } from './modals/theme.component';
 
 import { GUID } from './util/guid';
 
@@ -21,7 +22,8 @@ import { GUID } from './util/guid';
         TokenComponent,
         GameComponent,
         RulesComponent,
-        AboutComponent
+        AboutComponent,
+        ThemeComponent
     ],
     imports: [
         BrowserModule,

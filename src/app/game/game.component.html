@@ -42,7 +42,7 @@
 
     <div class="row tables">
         <div class="col-sm-7">
-            <table class="grid is-bordered float-right" [ngClass]="cssCurrentPlayerColor">
+            <table class="grid is-bordered float-right" [ngClass]="{'cssCurrentPlayerColor': true, 'showLetters': gameData.theme.showLetter}">
                 <tbody [ngClass]="currentTurn ? '' : 'notCurrentTurn'">
                     <tr *ngFor="let row of board.tiles; let y = index">
                         <td *ngFor="let col of row; let x = index" (click)="place($event)" id="t{{y}}{{x}}" [ngClass]="validSector(y, x) ? '' : 'disabled'">
@@ -56,7 +56,7 @@
         <div class="col-sm-5">
             <div class="d-table h-100 results">
                 <div class="d-table-cell align-middle h-100">
-                    <table class="grid is-bordered results float-left">
+                    <table class="grid is-bordered results float-left" [ngClass]="{'showLetters': gameData.theme.showLetter}">
                         <tbody>
                             <tr *ngFor="let row of board.results; let y = index">
                                 <td *ngFor="let col of row; let x = index" id="t{{y}}{{x}}">

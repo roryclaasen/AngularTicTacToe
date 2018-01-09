@@ -83,15 +83,19 @@ table.grid {
             cursor: default;
             &.cross {
                 background-color: red;
-                &:before {
-                    content: 'X'
-                }
             }
             &.nought {
                 background-color: blue;
-                &:before {
-                    content: 'O'
-                }
+            }
+        }
+    }
+    &.showLetters {
+        tr td .color {
+            &.cross:before {
+                content: 'X'
+            }
+            &.nought:before {
+                content: 'O'
             }
         }
     }
