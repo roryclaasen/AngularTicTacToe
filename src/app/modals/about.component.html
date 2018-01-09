@@ -1,0 +1,55 @@
+<div class="modal fade" id="{{ modalId }}" tabindex="-1" role="dialog" [attr.aria-labelledby]="modalId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titleId">{{ title }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Tic-tac-toe is a simple, 2-player, strategy game played on a board of 9 cells set out in a 3x3 square. The first player
+                    places an "X" an any cell. The second player places an "0" in any remaining cell. The players continue taking turns placing
+                    their mark in remaining cells. The winner is the first player to place three of his marks in a row, column, or diagonal.
+                </p>
+                <p>
+                    Ultimate Tic-Tac-Toe then takes this a step further and is a 2-player computer game played on a game board comprising nine tic-tac-toe games
+                    set out in nine mini-squares within a 3x3 greater-square. Thus, there are 81 cells, arranged in nine 3x3 mini-squares within
+                    a greater square.
+                </p>
+                <p>
+                    Built using <a href="https://angular.io/">Angular 5</a>, 
+                    Souce Control on <a href="https://github.com/roryclaasen/AngularTicTacToe/">Github</a>, 
+                    Powered by <a href="https://nodejs.org">Node.js</a>, 
+                    Served on <a href="https://heroku.com/">heroku</a>.
+                </p>
+                <div class="row align-items-center mainContent text-center">
+                    <div class="col-sm">
+                        <a href="https://angular.io/">
+                            <img class="img-fluid angular" src="./assets/logos/angular.svg">
+                        </a>
+                    </div>
+                    <div class="col-sm">
+                        <a href="https://github.com">
+                            <img class="img-fluid github" src="./assets/logos/github.png">
+                        </a>
+                    </div>
+                    <div class="col-sm">
+                        <a href="https://nodejs.org">
+                            <img class="img-fluid nodejs" src="./assets/logos/node.js.svg">
+                        </a>
+                    </div>
+                    <div class="col-sm">
+                        <a href="https://heroku.com/">
+                            <img class="img-fluid heroku" src="./assets/logos/heroku.png">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cose!</button>
+            </div>
+        </div>
+    </div>
+</div>

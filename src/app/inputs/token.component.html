@@ -3,7 +3,7 @@
 </div>
 
 <div class="card mx-auto" style="max-width: 30rem;">
-    <div class="card-header">{{ showOptions ? 'What do you want to do?' : inputPrompt }}</div>
+    <div class="card-header font-weight-bold">{{ showOptions ? 'What do you want to do?' : inputPrompt }}</div>
     <div class="card-body">
         <div *ngIf="showOptions" class="input-group d-inline-block">
             <button class="btn btn-success float-left" (click)='createGame()'>Create A Game</button>

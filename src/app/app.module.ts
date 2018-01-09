@@ -10,6 +10,7 @@ import { TokenComponent } from './inputs/token.component';
 import { GameComponent } from './game/game.component';
 
 import { RulesComponent } from './modals/rules.component';
+import { AboutComponent } from './modals/about.component';
 
 import { GUID } from './util/guid';
 
@@ -19,7 +20,8 @@ import { GUID } from './util/guid';
         NameComponent,
         TokenComponent,
         GameComponent,
-        RulesComponent
+        RulesComponent,
+        AboutComponent
     ],
     imports: [
         BrowserModule,

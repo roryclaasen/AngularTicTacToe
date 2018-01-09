@@ -1,12 +1,21 @@
 # Ultimate TicTacToe (MIT)
 
-###### Based off my old java project [Tic Tac Toe](https://github.com/roryclaasen/TicTacToe) built with angular 5
+###### Based off my old java project [Tic Tac Toe (java)](https://github.com/roryclaasen/TicTacToe) now rebuilt with angular 5
 
 Play the game in your browser at [roryclaasen.me/TicTacToe](http://roryclaasen.me/TicTacToe)
 
-## Rules
+## About
 
-Ultimate TicTacToe is a 2-player computer game played on a game board comprising nine tic-tac-toe games set out in nine mini-squares within a 3x3 greater-square.  Thus, there are 81 cells, arranged in nine 3x3 mini-squares within a greater square.
+Tic-tac-toe is a simple, 2-player, strategy game played on a board of 9 cells set out in a 3x3 square. 
+The first player
+places an "X" an any cell. 
+The second player places an "0" in any remaining cell. The players continue taking turns placing their mark in remaining cells. 
+The winner is the first player to place three of his marks in a row, column, or diagonal.
+
+Ultimate Tic-Tac-Toe then takes this a step further and is a 2-player computer game played on a game board comprising nine tic-tac-toe games set out in nine mini-squares within a 3x3 greater-square. 
+Thus, there are 81 cells, arranged in nine 3x3 mini-squares within a greater square.
+
+## Rules
 
 ### Objective:
 
@@ -19,3 +28,25 @@ The objective of this game is to be the first to win three tic-tac-toe games lyi
 3.  Thereafter, the two players take turns placing their mark in any unfilled cell within the mini-square dictated by the cell position marked by the previous player.  For the first player, this mini-square will be outlined in red.
 4.  The first tic-tac-toe winner in a mini-square remains the winner in that mini-square for the remainder of the game.
 5.  If a player is sent to a mini-square in which all the cells are filled, the player may next place his mark in any unfilled cell in any other mini-board.
+
+# Install
+
+```
+$ git clone https://github.com/roryclaasen/AngularTicTacToe.git AngularTicTacToe
+$ cd AngularTicTacToe
+$ npm install
+```
+
+If `npm install` didn't build in the `postinstall` stage run
+
+```
+$ npm run build.prod
+```
+
+And finally
+
+```
+$ npm start
+
+Starting sevrer listening on http://localhost:4000
+```

@@ -1,0 +1,11 @@
+@media (max-width: 767.99px) {
+    img {
+        &.angular, &.github, &.nodejs, &.heroku {
+            max-width: 80%;
+            margin-bottom: 10px;
+        }
+        &.angular {
+            max-width: 70%;
+        }
+    }
+}

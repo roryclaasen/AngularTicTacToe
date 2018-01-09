@@ -1,11 +1,11 @@
 nav.navbar {
     z-index: 100;
-    // .navbar-collapse {
-    //     border-bottom: 1px solid white;
-    // }
+    .navbar-brand {
+        font-weight: 500;
+    }
 }
 
-$navarHeight: 56px;
+$navarHeight: 56.4px;
 $footerHeight: 60px;
 
 .mainContent {
