@@ -5,10 +5,20 @@ html, body { height: 100%; width: 100%; }
 
 .btn:not(.disabled) { cursor: pointer; }
 
-.bg-anim {
-    @include animation('bgColor 14s infinite');
-    -webkit-animation-direction: alternate; 
-    animation-direction: alternate;
+body {
+    &.bg-anim {
+        @include animation('bgColor 14s infinite');
+        -webkit-animation-direction: alternate; 
+        animation-direction: alternate;
+    }
+
+    &.chalk {
+        background-color: rgb(36, 37, 39);
+        background-image: url(/assets/chalkboard.jpg);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
 }
 
 @include keyframes(bgColor) {

@@ -90,10 +90,10 @@ export class GameComponent implements OnInit {
     }
 
     place(e: any): void {
-        const game = this;
         if (this.currentTurn && this.board.winner === undefined) {
             const id = e.target.id, row = id.substring(1, 2), col = id.substring(2, 3);
-            if (this.validSector(row, col)) {
+            if (this.validSector(Math.floor(row / 3), Math.floor(col / 3))) {
+                const game = this;
                 this.socket.emit(SocketCommands.board.place, {
                     token: this.board.token,
                     placeX: col,
@@ -109,8 +109,8 @@ export class GameComponent implements OnInit {
         if (this.board.winner !== undefined) { return true; }
         if (this.board.currentY === undefined && this.board.currentX === undefined) { return true; }
 
-        if (Math.floor(row / 3) === this.board.currentY % 3) {
-            if (Math.floor(col / 3) === this.board.currentX % 3) { return true; }
+        if (row === Math.floor(this.board.currentY % 3)) {
+            if (col === Math.floor(this.board.currentX % 3)) { return true; }
         }
 
         let filled = true;
@@ -186,6 +186,70 @@ export class GameComponent implements OnInit {
 
     get isInResults(): Boolean {
         return this.stage === GameStage.results;
+    }
+
+    tableTheme(): String {
+        if (this.gameData.theme.themeId === 0) {
+            return '';
+        }
+        return this.gameData.theme.themes[this.gameData.theme.themeId].class;
+    }
+
+    showLetters(): Boolean {
+        if (this.gameData.theme.themes[this.gameData.theme.themeId].letters) {
+            return true;
+        }
+        return this.gameData.theme.showLetters;
+    }
+
+    getSectorClass(x: number, y: number): any[] {
+        let classes = [];
+        if (!this.validSector(y, x)) {
+            classes.push('disabled');
+        } else if (!this.currentTurn) {
+            classes.push('notCurrentTurn');
+        }
+        return classes;
+    }
+
+    getTableClasses(results: Boolean): any[] {
+        let classes = [];
+        // Border Color
+        if (this.tableTheme() !== 'chalk' && !results) {
+            if (this.board.turn === 0) {
+                classes.push('border-cross');
+            } else {
+                classes.push('border-nought');
+            }
+        }
+        // Show Letters
+        if (this.showLetters()) {
+            classes.push('showLetters');
+        }
+        classes.push(this.tableTheme());
+        return classes;
+    }
+
+    tilesInSector(x: number, y: number) {
+        let tiles = [];
+        for (let tY = 0; tY < 3; tY++) {
+            tiles[tY] = [];
+            for (let tX = 0; tX < 3; tX++) {
+                tiles[tY][tX] = this.board.tiles[(y * 3) + tY][(x * 3) + tX];
+            }
+        }
+        return tiles;
+    }
+
+    get tilesInGame() {
+        let tiles = [];
+        for (let y = 0; y < 3; y++) {
+            tiles[y] = [];
+            for (let x = 0; x < 3; x++) {
+                tiles[y][x] = this.tilesInSector(x, y);
+            }
+        }
+        return tiles;
     }
 }
 

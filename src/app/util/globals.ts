@@ -1,5 +1,5 @@
 import { Board } from './board';
-
+import { CookieService } from 'ngx-cookie';
 import { environment } from './../../environments/environment';
 
 import * as io from 'socket.io-client';
@@ -45,12 +45,42 @@ export class GameData {
     board: Board;
 
     theme: any = {
-        showLetter: true
+        showLetters: true,
+        themes: [{
+            name: 'Colorful',
+            class: 'bg-anim'
+        }, {
+            name: 'Chalk',
+            class: 'chalk',
+            letters: true
+        }],
+        themeId: 0
     };
 
-    constructor() {
+    constructor(private _cookieService: CookieService) {
         this.board = new Board();
         this.username = '';
+        this.updateThemeFromCookies();
+        this.setThemeToCookie();
+    }
+
+    setThemeToCookie(): void {
+        let cookieOptions = {
+            expires: new Date(new Date().getTime() + (10 * 24 * 60 * 60 * 1000))
+        };
+        this._cookieService.putObject('theme.showLetters', this.theme.showLetters, cookieOptions);
+        this._cookieService.putObject('theme.themeId', this.theme.themeId, cookieOptions);
+    }
+
+    updateThemeFromCookies(): void {
+        let showLetters = this._cookieService.getObject('theme.showLetters');
+        if (showLetters) {
+            this.theme.showLetters = showLetters;
+        }
+        let themeId = this._cookieService.getObject('theme.themeId');
+        if (themeId) {
+            this.theme.themeId = themeId;
+        }
     }
 }
 

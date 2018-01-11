@@ -31,7 +31,7 @@
 
 <app-module-rules></app-module-rules>
 <app-module-about></app-module-about>
-<app-module-theme [gameTheme]="gameData.theme" (themeEvent)="themeEvent($event)"></app-module-theme>
+<app-module-theme [gameData]="gameData"></app-module-theme>
 
 <div class="w-100 mx-auto row align-items-center mainContent" [ngClass]="{'notInGame': !gameStarted, 'hasFooter': showFooter}">
     <div class="col text-center">

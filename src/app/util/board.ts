@@ -13,7 +13,7 @@ export class Board {
         this.update(values);
     }
 
-    update(values: Object = {}) {
+    update(values: Object = {}): void {
         Object.assign(this, values);
     }
 
@@ -34,6 +34,18 @@ export class Board {
             }
         }
         return count;
+    }
+
+    reset(): void {
+        this.names = [];
+        this.token = undefined;
+        this.turn = undefined;
+        this.tiles = [];
+        this.results = [];
+        this.currentX = undefined;
+        this.currentY = undefined;
+        this.winner = undefined;
+        this.moves = [];
     }
 
     get players(): number {

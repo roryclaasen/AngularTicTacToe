@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
+import { CookieModule } from 'ngx-cookie';
 
 import { AppComponent } from './app.component';
 import { NameComponent } from './inputs/name.component';
@@ -29,7 +30,8 @@ import { GUID } from './util/guid';
         BrowserModule,
         FormsModule,
         HttpModule,
-        HttpClientModule
+        HttpClientModule,
+        CookieModule.forRoot()
     ],
     providers: [ GUID ],
     bootstrap: [ AppComponent ]

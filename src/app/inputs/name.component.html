@@ -6,6 +6,6 @@
                 <input type="text" class="form-control" placeholder="{{ inputLabel }}" [attr.aria-label]="inputLabel" maxlength="32" [(ngModel)]='input'>
             </div>
         </div>
-        <button class="btn btn-success mt-3 ml-2 float-right" (click)='continue()' [ngClass]="(input.length <= 3) ? 'disabled' : ''">Continue</button>
+        <button class="btn btn-success mt-3 ml-2 float-right" (click)='continue()' [ngClass]="(input.length <= 2) ? 'disabled' : ''">Continue</button>
     </div>
 </div>

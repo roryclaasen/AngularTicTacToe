@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Globals, GameData, AppStage} from './util/globals';
 import { Howler } from './util/audio';
+import { CookieService } from 'ngx-cookie';
 
 @Component({
     selector: 'app-root',
@@ -22,13 +23,17 @@ export class AppComponent implements OnInit {
 
     private stage: AppStage;
 
-    constructor(private cdr: ChangeDetectorRef) { }
+    constructor(private cdr: ChangeDetectorRef, private _cookieService: CookieService) {}
 
     ngOnInit(): void {
         Globals.getSocket().then(data => this.socket = data);
-        this.gameData = new GameData();
+        this.gameData = new GameData(this._cookieService);
         this.stage = AppStage.username;
         Howler.load();
+
+        let body = document.getElementsByTagName('body')[0];
+        body.className = '';
+        body.classList.add(this.gameData.theme.themes[this.gameData.theme.themeId].class);
     }
 
     usernameChaged(username: string): void {
@@ -76,15 +81,8 @@ export class AppComponent implements OnInit {
                 this.gameData.spectating = false;
                 this.stage = AppStage.token;
                 this.gameStarted = false;
+                this.gameData.board.reset();
                 break;
-            }
-        }
-    }
-
-    themeEvent(data: any): void {
-        switch (data.task) {
-            case ('update'): {
-                this.gameData.theme = data.theme;
             }
         }
     }
