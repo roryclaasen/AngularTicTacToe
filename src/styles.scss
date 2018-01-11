@@ -14,10 +14,12 @@ body {
 
     &.chalk {
         background-color: rgb(36, 37, 39);
-        background-image: url(/assets/chalkboard.jpg);
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
+        &.bg-image {
+            background-image: url(/assets/chalkboard.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
     }
 }
 

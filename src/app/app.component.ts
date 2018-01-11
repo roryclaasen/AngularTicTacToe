@@ -32,8 +32,12 @@ export class AppComponent implements OnInit {
         Howler.load();
 
         let body = document.getElementsByTagName('body')[0];
+        let theme = this.gameData.theme.themes[this.gameData.theme.themeId];
         body.className = '';
         body.classList.add(this.gameData.theme.themes[this.gameData.theme.themeId].class);
+        if (theme.hasBackground && this.gameData.theme.showBackground) {
+            body.classList.add('bg-image');
+        }
     }
 
     usernameChaged(username: string): void {

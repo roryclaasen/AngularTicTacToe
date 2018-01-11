@@ -46,12 +46,15 @@ export class GameData {
 
     theme: any = {
         showLetters: true,
+        showBackground: true,
         themes: [{
             name: 'Colorful',
-            class: 'bg-anim'
+            class: 'bg-anim',
+            hasBackground: false
         }, {
             name: 'Chalk',
             class: 'chalk',
+            hasBackground: true,
             letters: true
         }],
         themeId: 0
@@ -70,17 +73,18 @@ export class GameData {
         };
         this._cookieService.putObject('theme.showLetters', this.theme.showLetters, cookieOptions);
         this._cookieService.putObject('theme.themeId', this.theme.themeId, cookieOptions);
+        this._cookieService.putObject('theme.showBackground', this.theme.showBackground, cookieOptions);
     }
 
     updateThemeFromCookies(): void {
         let showLetters = this._cookieService.getObject('theme.showLetters');
-        if (showLetters) {
-            this.theme.showLetters = showLetters;
-        }
+        if (showLetters) { this.theme.showLetters = showLetters; }
+
         let themeId = this._cookieService.getObject('theme.themeId');
-        if (themeId) {
-            this.theme.themeId = themeId;
-        }
+        if (themeId) { this.theme.themeId = themeId; }
+
+        let showBackground = this._cookieService.getObject('theme.showBackground');
+        if (showBackground) { this.theme.showBackground = showBackground; }
     }
 }
 
