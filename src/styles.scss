@@ -5,6 +5,10 @@ html, body { height: 100%; width: 100%; }
 
 .btn:not(.disabled) { cursor: pointer; }
 
+.card {
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+}
+
 body {
     &.bg-anim {
         @include animation('bgColor 14s infinite');
@@ -13,12 +17,22 @@ body {
     }
 
     &.chalk {
-        background-color: rgb(36, 37, 39);
+        $themeColor: rgb(36, 37, 39);
+        background-color: $themeColor;
         &.bg-image {
             background-image: url(/assets/chalkboard.jpg);
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
+        }
+        .card {
+            background-color: $themeColor;
+            border-color: rgba(white, 0.125);
+            color: whitesmoke;
+            .card-header {
+                background-color: rgba(white, 0.03);
+                border-color: rgba(white, 0.125);
+            }
         }
     }
 }
