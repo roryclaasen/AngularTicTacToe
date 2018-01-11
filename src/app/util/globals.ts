@@ -78,13 +78,13 @@ export class GameData {
 
     updateThemeFromCookies(): void {
         let showLetters = this._cookieService.getObject('theme.showLetters');
-        if (showLetters) { this.theme.showLetters = showLetters; }
+        if (showLetters !== undefined) { this.theme.showLetters = showLetters; }
 
         let themeId = this._cookieService.getObject('theme.themeId');
-        if (themeId) { this.theme.themeId = themeId; }
+        if (themeId !== undefined) { this.theme.themeId = themeId; }
 
         let showBackground = this._cookieService.getObject('theme.showBackground');
-        if (showBackground) { this.theme.showBackground = showBackground; }
+        if (showBackground !== undefined) { this.theme.showBackground = showBackground; }
     }
 }
 

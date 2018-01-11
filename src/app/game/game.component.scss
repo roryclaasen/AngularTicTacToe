@@ -113,48 +113,4 @@ table {
         &.cross:before { content: 'X'; }
         &.nought:before { content: 'O'; }
     }
-
-    &.chalk {
-        font-family: 'Permanent Marker', cursive;
-        &.master {
-            border-color: transparent;
-            &:not(.cell) {
-                &.border-cross, &.border-nought { border-color: transparent !important; }
-
-                tr {
-                    &:nth-child(1), &:nth-child(2) { border-color: transparent; }
-                    td {
-                        &:nth-child(1), &:nth-child(2) { border-color: transparent; }
-                    }
-                }
-            }
-            .cell {
-                &.disabled tr td, &.notCurrentTurn tr td { background-color: transparent !important; }
-                &.disabled { opacity: 0.4; }
-                &.notCurrentTurn { opacity: 0.6; }
-            }
-        }
-        &.master .cell, &.results.cell {
-            &:not(.disabled) tr {
-                &:nth-child(1), &:nth-child(2) { border-width: 2px; }
-                td { &:nth-child(1), &:nth-child(2) { border-width: 2px; }}
-            }
-            tr {
-                &:nth-child(1), &:nth-child(2) { border-color: whitesmoke; }
-                td {
-                    &:nth-child(1), &:nth-child(2) { border-color: whitesmoke; }
-                    background-color: transparent !important;
-
-                    .color {
-                        &.cross, &.nought {
-                            background-color: transparent !important;
-                        }
-                    }
-                }
-            }
-        }
-        &.results {
-            border-color: transparent !important;
-        }
-    }
 }
