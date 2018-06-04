@@ -48,5 +48,5 @@ And finally
 ```
 $ npm start
 
-Starting sevrer listening on http://localhost:4000
+Starting server listening on http://localhost:4000
 ```
